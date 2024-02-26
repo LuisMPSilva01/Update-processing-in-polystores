@@ -1,0 +1,2 @@
+CREATE EXTENSION plsh;
+CREATE EXTENSION mongo_fdw;

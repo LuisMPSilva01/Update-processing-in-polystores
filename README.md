@@ -1,0 +1,2 @@
+# Update-processing-in-polystores
+ Transactional isolation in Polystores can be achieved by leveraging the query engine, i.e., implementing some of the responsibilities of a Transactional Storage Manager (TSM) within the query language itself. This approach simplifies the design and implementation, reducing the need to develop specific solutions for each type of Datastore, while simultaneously enhancing performance through dynamic query optimization.

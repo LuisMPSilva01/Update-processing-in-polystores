@@ -1,0 +1,13 @@
+source countries('KEY':int,'NAME':string,'DESCRIPTION':string).
+source cities('_id':string,'NAME':string,'ADDRESS':string,'PHONE':string,'NATIONKEY':int).
+view japan_view('KEY':string,'NAME':string,'ADDRESS':string).
+
+% constraint:
+_|_ :- not countries(_, 'Japan', _).
+
+-cities(K, N, A, P, NK) :- cities(K, N, A, P, NK), countries(NK, NATION, _), NATION ='Japan', not japan_view(K, N, A).
+
+tmp(K, N, A) :- cities(K, N, A, _, NK), countries(NK, 'Japan', _).
+
++cities(K, N, A, P, NK) :- japan_view(K, N, A), not tmp(K, N, A), countries(NK, 'Japan', _), cities(K, _, _, P, _).
++cities(K, N, A, P, NK) :- japan_view(K, N, A), not tmp(K, N, A), countries(NK, 'Japan', _), not cities(K, _, _, _, _), P = 'unknown'.

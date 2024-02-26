@@ -1,0 +1,12 @@
+[
+    {"name":"A","address":"Tokyo","phone":"2432","nationkey":1},
+    {"name":"B","address":"Hanoi","phone":"5435","nationkey":3},
+    {"name":"C","address":"Beijing","phone":"6524","nationkey":2},
+    {"name":"D","address":"New Delhi","phone":"1234","nationkey":4},
+    {"name":"E","address":"Brasília","phone":"5678","nationkey":5},
+    {"name":"F","address":"Moscow","phone":"9101","nationkey":6},
+    {"name":"G","address":"Berlin","phone":"1213","nationkey":7},
+    {"name":"H","address":"Paris","phone":"4151","nationkey":8},
+    {"name":"I","address":"Washington","phone":"7181","nationkey":9},
+    {"name":"J","address":"Seoul","phone":"2021","nationkey":10}
+]
