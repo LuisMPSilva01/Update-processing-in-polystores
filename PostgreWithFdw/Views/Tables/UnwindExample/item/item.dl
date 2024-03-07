@@ -1,0 +1,22 @@
+source unwindexample('id':int,'original_id':string,'item':string,'uom':string,'h':int,'w':int).
+view item('original_id':string,'item':string,'uom':string).
+
+%----- Item View -----
+%--- View definition
+
+% Define the item view
+item(OID, I,UOM) :- unwindexample(ID, OID, I, UOM, H, W).
+
+%--- Constraints
+%PK(unwindexample,['id']).
+_|_ :- unwindexample(ID1, OID, I1, UOM1, H1, W1), unwindexample(ID2, OID, I2, UOM2, H2, W2), not I1=I2.
+_|_ :- unwindexample(ID1, OID, I1, UOM1, H1, W1), unwindexample(ID2, OID, I2, UOM2, H2, W2), not UOM1=UOM2.
+
+tmp3(OID, H, W):- unwindexample(ID, OID, I, UOM, H, W).
+_|_ :- unwindexample(_,OID,_,_,H1,W1),unwindexample(_,OID,_,_,H2,W2), not tmp3(OID,H1,W2), not tmp3(OID,H2,W1).
+
+%--- Inserts and deletes
+-unwindexample(ID, OID, I, UOM, H, W) :- unwindexample(ID, OID, I, UOM, H, W), not item(OID, I,UOM).
+
+tmp(OID,I,UOM) :- unwindexample(ID, OID, I, UOM, H, W).
++unwindexample(ID, OID, I, UOM, H, W) :- not tmp(OID,I,UOM), item(OID, I,UOM),ID=0, H=1, W=1.

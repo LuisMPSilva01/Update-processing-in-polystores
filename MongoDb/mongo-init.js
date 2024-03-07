@@ -12,9 +12,10 @@ function createCollectionAndInsertDocuments(database, collectionName, jsonFilePa
     collection.insertMany(documents);
 }
 
-createCollectionAndInsertDocuments(testDB, 'shop', '/Collections/shop.json');
-createCollectionAndInsertDocuments(testDB, 'zips', '/Collections/zips.json');
-createCollectionAndInsertDocuments(testDB, 'cities', '/Collections/cities.json');
+createCollectionAndInsertDocuments(testDB, 'shop', '/MongoDb/Collections/shop.json');
+createCollectionAndInsertDocuments(testDB, 'zips', '/MongoDb/Collections/zips.json');
+createCollectionAndInsertDocuments(testDB, 'cities', '/MongoDb/Collections/cities.json');
+createCollectionAndInsertDocuments(testDB, 'example', '/MongoDb/Collections/unwindExample.json');
 
 // Create a user with read and write privileges for the database
 testDB.createUser({
@@ -24,3 +25,9 @@ testDB.createUser({
     { role: 'userAdminAnyDatabase', db: 'admin' }
   ]
 });
+
+//Carregar a gorda
+load('/MongoDb/AggregationPipeline/unwind.js');
+
+//Carregar unwind example
+load('/MongoDb/AggregationPipeline/unwindExample.js');

@@ -1,0 +1,18 @@
+%schema definition
+source items('item_id':int,'item':string,'qty':int).
+source items_size('items_size_id':int,'item_id':int,'uom':string).
+source items_size_h('items_size_h_id':int,'items_size_id':int,'h':float).
+source items_size_w('items_size_w_id':int,'items_size_id':int,'w':float).
+source highest_ISID('highest':int).
+source highest_ISHID('highest':int).
+source highest_ISWID('highest':int).
+% view definition
+item_high_h_view(IID,I,QTY,UOM,H,W) :- items(IID,I,QTY), items_size(ISID,IID,UOM), items_size_h(ISHID, ISID,H), items_size_w(ISWID,ISID,W), H > 7.
+
+
+% constraint:
+_|_ :- not items_size_h(_,_,H), H > 7.
+
+-items(IID,I,QTY) :- items(IID,_,_), not item_high_h_view(IID,_,_,_,_,_).
++items(IID,I,QTY) :- not items(IID,_,_), item_high_h_view(IID,I,QTY,_,_,_).
++items_size(ISID+1,IID,UOM) :- not items_size(_,IID,_), items(IID,_,_), item_high_h_view(IID,_,_,UOM,_,_), highest_ISID(ISID).

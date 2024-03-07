@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   postgres:
+    container_name: updt_process_postgre
     build:
       context: ./PostgreWithFdw
       dockerfile: Dockerfile
@@ -17,12 +18,13 @@ services:
 
   mongodb:
     image: mongo:latest
-    container_name: mongo_container
+    container_name: updt_process_mongo_container
     restart: always
     ports:
       - "27017:27017"
     volumes:
-      - ./MongoDb/Collections/:/Collections
+      - ./MongoDb/Collections/:/MongoDb/Collections/
+      - ./MongoDb/AggregationPipeline/:/MongoDb/AggregationPipeline/
       - ./MongoDb/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     #environment:
     #  - MONGO_INITDB_ROOT_USERNAME=admin
@@ -30,8 +32,9 @@ services:
     #  - MONGO_INITDB_DATABASE=test
     command: mongod --bind_ip_all
 
-  birds:
-    image: dangtv/birds
-    ports:
-      - "3010:3010"
+#  birds:
+#    image: dangtv/birds
+#    container_name: updt_process_birds_editor
+#    ports:
+#      - "3010:3010"
 

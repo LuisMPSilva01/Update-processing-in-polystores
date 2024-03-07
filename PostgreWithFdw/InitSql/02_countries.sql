@@ -15,4 +15,3 @@ INSERT INTO countries (key, name, description) VALUES
     (8, 'France', 'A country of art, fashion, and gastronomy, known for its iconic landmarks and romantic ambiance.'),
     (9, 'United States', 'A melting pot of cultures, innovation, and opportunity, with diverse landscapes and iconic cities.'),
     (10, 'South Korea', 'The tech-savvy nation famous for K-pop, kimchi, and rapid economic development.');
-

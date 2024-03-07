@@ -2,6 +2,8 @@ source countries('KEY':int,'NAME':string,'DESCRIPTION':string).
 source cities('_id':string,'NAME':string,'ADDRESS':string,'PHONE':string,'NATIONKEY':int).
 view japan_view('KEY':string,'NAME':string,'ADDRESS':string).
 
+japan_view(K, N, A) :- cities(K, N, A, P, NK), countries(NK, NATION, D), NATION='Japan'.
+
 % constraint:
 _|_ :- not countries(_, 'Japan', _).
 

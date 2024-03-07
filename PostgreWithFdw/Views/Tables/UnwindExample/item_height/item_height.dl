@@ -1,0 +1,38 @@
+source unwindexample('id':int,'original_id':string,'item':string,'uom':string,'h':int,'w':int).
+source item('original_id':string,'item':string,'uom':string).
+view item_height('original_id':string,'Height':int).
+
+
+%----- Item_size View -----
+%--- View definition (get):
+
+item_height(OID,H) :- unwindexample(ID, OID, I, UOM, H, W).
+
+%--- Constraints
+%Primary key
+%PK(unwindexample,['_id']).
+
+% elements with the same OID share I and UOM
+_|_ :- unwindexample(ID1, OID, I1, UOM1, H1, W1), unwindexample(ID2, OID, I2, UOM2, H2, W2), not I1=I2.
+_|_ :- unwindexample(ID1, OID, I1, UOM1, H1, W1), unwindexample(ID2, OID, I2, UOM2, H2, W2), not UOM1=UOM2.
+
+% H and W have to be premuted to every combination i.e if h=[1,2] and w=[3,4] we need the combinations: (1,3),(1,4),(2,3),(2,4)
+tmp1(OID, H, W):- unwindexample(ID, OID, I, UOM, H, W).
+_|_ :- unwindexample(_,OID,_,_,H1,W1),unwindexample(_,OID,_,_,H2,W2), not tmp1(OID,H1,W2), not tmp1(OID,H2,W1).
+
+% There are no items without OID associated in unwindexample
+tmp2(OID,I,UOM) :- unwindexample(ID, OID, I, UOM, H, W).
+_|_ :- item(OID, I,UOM), not tmp2(OID,I,UOM).
+
+% In order to insert to item_height, there needs to be an item with the same OID
+tmp3(OID) :- item(OID, I,UOM).
+_|_ :- item_height(OID,H), not tmp3(OID).
+
+
+%--- Inserts and deletes
+% Delete all the items with the same H for this OID
+-unwindexample(ID, OID, I, UOM, H, W) :- unwindexample(ID, OID, I, UOM, H, W), not item_height(OID,H).
+
+% Insert items where new combination when there isnt one (W,H) for the OID
+tmp4(OID,H,W) :- unwindexample(ID, OID, I, UOM, H, W).
++unwindexample(ID, OID, I, UOM, H, W) :- not tmp4(OID,H,W), unwindexample(_, OID, I, UOM, _, W), item_height(OID,H), ID=0.

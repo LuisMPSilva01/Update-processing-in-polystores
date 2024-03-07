@@ -1,5 +1,5 @@
 CREATE SERVER "MongoDB server" FOREIGN DATA WRAPPER mongo_fdw OPTIONS (
-  address 'mongo_container',
+  address 'updt_process_mongo_container',
   port '27017'
 );
 
@@ -40,3 +40,17 @@ CREATE FOREIGN TABLE shop (
     database 'test',
         collection 'shop'
 );
+
+CREATE FOREIGN TABLE gorda (
+  _id name,
+  original_id name,
+  item text,
+  qty int,
+  h float,
+  w float,
+  uom text
+) SERVER "MongoDB server" OPTIONS (
+    database 'test',
+        collection 'gorda'
+);
+

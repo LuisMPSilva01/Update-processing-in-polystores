@@ -1,0 +1,21 @@
+source gorda('_id':string,'original_id':string,'item':string,'qty':int,'h':int,'w':int,'uom':string).
+view item('original_id':string,'item':string,'qty':int,'uom':string).
+
+%----- Item View -----
+%--- View definition
+
+% Define the item view by selecting distinct combinations of original_id, item, and qty
+% Define a predicate to check for duplicates
+item(OID, I, QTY,SU) :- gorda(ID1, OID, I, QTY, _, _, SU).
+
+%--- Constraints
+PK(gorda,['_id']).
+_|_ :- gorda(_,OID,I1,_,_,_,_), gorda(_,OID,I2,_,_,_,_), not I1=I2.
+_|_ :- gorda(_,OID,_,QTY1,_,_,_), gorda(_,OID,_,QTY2,_,_,_), not QTY1=QTY2.
+
+_|_ :- item(OID1, _, _,_), item(OID2, _, _,_), OID1 = OID2.
+%--- Inserts and deletes
+-gorda(ID,OID,I,QTY,SH,SW,SU) :- gorda(ID,OID,I,QTY,SH,SW,SU), not item(OID, I, QTY,SU).
+
+tmp(OID,I,QTY) :- gorda(ID,OID,I,QTY,SH,SW,SU).
++gorda(ID,OID,I,QTY,SH,SW,SU) :- not tmp(OID,I,QTY), item(OID, I, QTY,SU),ID='', SH=0, SW=0.

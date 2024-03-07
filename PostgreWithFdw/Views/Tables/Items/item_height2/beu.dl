@@ -1,0 +1,33 @@
+source gorda('_id':string,'original_id':string,'item':string,'qty':int,'h':int,'w':int,'uom':string).
+source item('original_id':string,'item':string,'qty':int,'uom':string).
+view item_height('original_id':string,'Height':int).
+
+
+%----- Item_size View -----
+%--- View definition (get):
+
+item_height(OID,SH) :- gorda(_,OID,_,_,SH,_,_).
+
+%--- Constraints
+%PK(gorda,['_id']).
+
+tmpgorda(OID,I,QTY,SU) :- gorda(_,OID,I,QTY,_,_,SU).
+_|_ :- item(OID, I, QTY,SU), not tmpgorda(OID,I,QTY,SU).
+
+
+tmpitem(OID) :- item(OID, _, _,_).
+_|_ :- item_height(OID,SH), not tmpitem(OID).
+
+tmpgorda(OID,SH1,SW2):- gorda(_,OID,_,_,SH1,SW2,_).
+_|_ :- gorda(_,OID,_,_,SH1,SW1,_),gorda(_,OID,_,_,SH2,SW2,_), not tmpgorda(OID,SH1,SW2), not tmpgorda(OID,SH2,SW1).
+
+
+_|_ :- gorda(_,OID,I1,QTY,_,_,SU),gorda(_,OID,I2,QTY,_,_,SU), not I1=I2.
+_|_ :- gorda(_,OID,I,QTY1,_,_,SU),gorda(_,OID,I,QTY2,_,_,SU), not QTY1=QTY2.
+_|_ :- gorda(_,OID,I,QTY,_,_,SU1),gorda(_,OID,I,QTY,_,_,SU2), not SU1=SU2.
+
+%--- Inserts and deletes
+-gorda(ID,OID,I,QTY,SH,SW,SU) :- gorda(ID,OID,I,QTY,SH,SW,SU), not item_height(OID,SH).
+
+tmpgorda(OID,I,QTY,SH2,SW,SU):- gorda(_,OID,I,QTY,SH2,SW,SU).
++gorda(ID,OID,I,QTY,SH2,SW,SU) :- not tmpgorda(OID,I,QTY,SH2,SW,SU), gorda(_,OID,I,QTY,SH1,SW,SU), item_height(OID,SH2), ID='', not SH1=SH2.

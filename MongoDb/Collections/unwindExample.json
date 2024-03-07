@@ -1,0 +1,4 @@
+[ 
+  { "item": "journal", "uom": "cm", "h": [1,2],  "w": [4,5]},
+  { "item": "notebook", "uom": "in", "h": [10,12], "w": [20,40]}
+]
