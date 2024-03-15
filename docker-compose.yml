@@ -25,6 +25,7 @@ services:
     volumes:
       - ./MongoDb/Collections/:/MongoDb/Collections/
       - ./MongoDb/AggregationPipeline/:/MongoDb/AggregationPipeline/
+      - ./MongoDb/NormalizedTransformations/:/MongoDb/NormalizedTransformations/
       - ./MongoDb/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     #environment:
     #  - MONGO_INITDB_ROOT_USERNAME=admin

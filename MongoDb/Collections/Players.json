@@ -1,0 +1,27 @@
+[
+    {
+        "name": "Trincao",
+        "address": "Lisboa",
+        "contact": [
+            {
+                "type": "email",
+                "value": "trincao@gmail.com"
+            }
+        ]
+    },
+    {
+        "name": "Marega",
+        "address": "Porto",
+        "contact": [
+            {
+                "type": "email",
+                "value": "marega@gmail.com"
+            },
+            {
+                "type": "tel",
+                "value": "987654321"
+            }
+
+        ]
+    }
+]

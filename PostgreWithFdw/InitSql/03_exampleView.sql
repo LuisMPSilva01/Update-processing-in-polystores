@@ -54,3 +54,12 @@ CREATE FOREIGN TABLE gorda (
         collection 'gorda'
 );
 
+CREATE FOREIGN TABLE PlayersSimpleDenormalized (
+  _id name,
+  name text,
+  address text,
+  contact text
+) SERVER "MongoDB server" OPTIONS (
+    database 'test',
+        collection 'PlayersSimplegorda'
+);

@@ -12,10 +12,12 @@ function createCollectionAndInsertDocuments(database, collectionName, jsonFilePa
     collection.insertMany(documents);
 }
 
-createCollectionAndInsertDocuments(testDB, 'shop', '/MongoDb/Collections/shop.json');
-createCollectionAndInsertDocuments(testDB, 'zips', '/MongoDb/Collections/zips.json');
-createCollectionAndInsertDocuments(testDB, 'cities', '/MongoDb/Collections/cities.json');
-createCollectionAndInsertDocuments(testDB, 'example', '/MongoDb/Collections/unwindExample.json');
+//createCollectionAndInsertDocuments(testDB, 'shop', '/MongoDb/Collections/shop.json');
+//createCollectionAndInsertDocuments(testDB, 'zips', '/MongoDb/Collections/zips.json');
+//createCollectionAndInsertDocuments(testDB, 'cities', '/MongoDb/Collections/cities.json');
+//createCollectionAndInsertDocuments(testDB, 'example', '/MongoDb/Collections/unwindExample.json');
+createCollectionAndInsertDocuments(testDB, 'Players', '/MongoDb/Collections/Players.json');
+createCollectionAndInsertDocuments(testDB, 'PlayersSimple', '/MongoDb/Collections/PlayersSimple.json');
 
 // Create a user with read and write privileges for the database
 testDB.createUser({
@@ -27,7 +29,16 @@ testDB.createUser({
 });
 
 //Carregar a gorda
-load('/MongoDb/AggregationPipeline/unwind.js');
+//load('/MongoDb/AggregationPipeline/unwind.js');
 
 //Carregar unwind example
-load('/MongoDb/AggregationPipeline/unwindExample.js');
+//load('/MongoDb/AggregationPipeline/unwindExample.js');
+
+//Unwind players
+load('/MongoDb/AggregationPipeline/unwindPlayers.js');
+
+//Unwind playersSimple
+load('/MongoDb/AggregationPipeline/unwindPlayersSimple.js');
+
+//Normalized playersSimple
+load('/MongoDb/NormalizedTransformations/PlayersSimple.js')

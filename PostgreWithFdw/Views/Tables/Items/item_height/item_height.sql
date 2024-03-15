@@ -258,4 +258,3 @@ AS $$
     RETURN true;
   END;
 $$;
-
