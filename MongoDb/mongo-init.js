@@ -17,7 +17,6 @@ function createCollectionAndInsertDocuments(database, collectionName, jsonFilePa
 //createCollectionAndInsertDocuments(testDB, 'cities', '/MongoDb/Collections/cities.json');
 //createCollectionAndInsertDocuments(testDB, 'example', '/MongoDb/Collections/unwindExample.json');
 createCollectionAndInsertDocuments(testDB, 'Players', '/MongoDb/Collections/Players.json');
-createCollectionAndInsertDocuments(testDB, 'PlayersSimple', '/MongoDb/Collections/PlayersSimple.json');
 
 // Create a user with read and write privileges for the database
 testDB.createUser({
@@ -37,8 +36,5 @@ testDB.createUser({
 //Unwind players
 load('/MongoDb/AggregationPipeline/unwindPlayers.js');
 
-//Unwind playersSimple
-load('/MongoDb/AggregationPipeline/unwindPlayersSimple.js');
-
-//Normalized playersSimple
-load('/MongoDb/NormalizedTransformations/PlayersSimple.js')
+//Normalized players
+load('/MongoDb/NormalizedTransformations/Players.js')

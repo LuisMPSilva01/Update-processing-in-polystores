@@ -1,0 +1,25 @@
+source playersbase('_id':string,'name':string,'address':string).
+source playerscontacts('_id':string,'name':string,'contact':string).
+view contactsportonormalized('name':string,'contact':string).
+
+%--- View definition (get):
+contactsportonormalized(N,C) :- playersbase(_,N,'Porto'), playerscontacts(_,N,C).
+
+%--- Constraints
+_|_ :- playersbase(_,N,ADD1), playersbase(_,N,ADD2), not ADD1 = ADD2.
+
+_|_ :- playerscontacts(_,N,_), not playername(N).
+
+% Prohibit the addition of a player to the view that belongs to another team
+playername(N) :- playersbase(ID,N,ADD).
+_|_ :- contactsportonormalized(N,_), playersbase(_,N,ADD), not ADD='Porto' .
+
+%--- Inserts and deletes
+-playerscontacts(ID,N,C) :- playerscontacts(ID,N,C), playersbase(_,N,'Porto'),not contactsportonormalized(N,C).
+
+% ID='' generates new ID automatically in MongoDB
+playername(N) :- playersbase(_,N,_).
++playersbase(ID,N,ADD) :- not playername(N), contactsportonormalized(N,C), ADD='Porto', ID=''. 
+
+playeraddandname(N,C) :- playerscontacts(ID,N,C).
++playerscontacts(ID,N,C) :- not playeraddandname(N,C), contactsportonormalized(N,C), ADD='Porto', ID=''.

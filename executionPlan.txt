@@ -1,0 +1,365 @@
+2024-03-21 17:15:36.015 GMT [89] LOG:  duration: 0.018 ms  plan:
+    Query Text: NOT EXISTS (SELECT * FROM information_schema.tables WHERE table_name = '__tmp_delta_ins_contactsportonormalized' OR table_name = '__tmp_delta_del_contactsportonormalized')
+    Result  (cost=23.87..23.88 rows=1 width=1) (actual time=0.016..0.017 rows=1 loops=1)
+      Buffers: shared hit=5
+      InitPlan 1 (returns $2)
+        ->  Nested Loop  (cost=8.97..23.87 rows=1 width=0) (actual time=0.014..0.015 rows=0 loops=1)
+              Join Filter: (c.relnamespace = nc.oid)
+              Buffers: shared hit=5
+              ->  Nested Loop Left Join  (cost=8.97..22.78 rows=1 width=4) (actual time=0.014..0.015 rows=0 loops=1)
+                    Buffers: shared hit=5
+                    ->  Bitmap Heap Scan on pg_class c  (cost=8.56..14.31 rows=1 width=8) (actual time=0.014..0.014 rows=0 loops=1)
+                          Recheck Cond: ((relname = '__tmp_delta_ins_contactsportonormalized'::name) OR (relname = '__tmp_delta_del_contactsportonormalized'::name))
+                          Filter: ((relkind = ANY ('{r,v,f,p}'::"char"[])) AND (pg_has_role(relowner, 'USAGE'::text) OR has_table_privilege(oid, 'SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER'::text) OR has_any_column_privilege(oid, 'SELECT, INSERT, UPDATE, REFERENCES'::text)))
+                          Buffers: shared hit=5
+                          ->  BitmapOr  (cost=8.56..8.56 rows=2 width=0) (actual time=0.012..0.012 rows=0 loops=1)
+                                Buffers: shared hit=4
+                                ->  Bitmap Index Scan on pg_class_relname_nsp_index  (cost=0.00..4.28 rows=1 width=0) (actual time=0.009..0.009 rows=1 loops=1)
+                                      Index Cond: (relname = '__tmp_delta_ins_contactsportonormalized'::name)
+                                      Buffers: shared hit=2
+                                ->  Bitmap Index Scan on pg_class_relname_nsp_index  (cost=0.00..4.28 rows=1 width=0) (actual time=0.002..0.002 rows=1 loops=1)
+                                      Index Cond: (relname = '__tmp_delta_del_contactsportonormalized'::name)
+                                      Buffers: shared hit=2
+                    ->  Nested Loop  (cost=0.41..8.46 rows=1 width=4) (never executed)
+                          ->  Index Scan using pg_type_oid_index on pg_type t  (cost=0.28..8.29 rows=1 width=8) (never executed)
+                                Index Cond: (oid = c.reloftype)
+                          ->  Index Only Scan using pg_namespace_oid_index on pg_namespace nt  (cost=0.13..0.16 rows=1 width=4) (never executed)
+                                Index Cond: (oid = t.typnamespace)
+                                Heap Fetches: 0
+              ->  Seq Scan on pg_namespace nc  (cost=0.00..1.05 rows=3 width=4) (never executed)
+                    Filter: (NOT pg_is_other_temp_schema(oid))
+2024-03-21 17:15:36.015 GMT [89] CONTEXT:  SQL expression "NOT EXISTS (SELECT * FROM information_schema.tables WHERE table_name = '__tmp_delta_ins_contactsportonormalized' OR table_name = '__tmp_delta_del_contactsportonormalized')"
+    PL/pgSQL function contactsportonormalized_materialization() line 7 at IF
+2024-03-21 17:15:36.017 GMT [89] LOG:  duration: 0.013 ms  plan:
+    Query Text: (SELECT count(*) FILTER (WHERE j.value = jsonb 'null') FROM  jsonb_each(to_jsonb(NEW)) j) > 0
+    Result  (cost=1.51..1.53 rows=1 width=1) (actual time=0.012..0.012 rows=1 loops=1)
+      InitPlan 1 (returns $0)
+        ->  Aggregate  (cost=1.50..1.51 rows=1 width=8) (actual time=0.011..0.011 rows=1 loops=1)
+              ->  Function Scan on jsonb_each j  (cost=0.01..1.00 rows=100 width=32) (actual time=0.008..0.008 rows=2 loops=1)
+2024-03-21 17:15:36.017 GMT [89] CONTEXT:  SQL expression "(SELECT count(*) FILTER (WHERE j.value = jsonb 'null') FROM  jsonb_each(to_jsonb(NEW)) j) > 0"
+    PL/pgSQL function contactsportonormalized_update() line 10 at IF
+2024-03-21 17:15:36.017 GMT [89] LOG:  duration: 0.004 ms  plan:
+    Query Text: DELETE FROM __tmp_delta_del_contactsportonormalized WHERE ROW(NAME,CONTACT) = NEW
+    Delete on __tmp_delta_del_contactsportonormalized  (cost=0.00..21.00 rows=0 width=0) (actual time=0.003..0.003 rows=0 loops=1)
+      ->  Seq Scan on __tmp_delta_del_contactsportonormalized  (cost=0.00..21.00 rows=4 width=6) (actual time=0.003..0.003 rows=0 loops=1)
+            Filter: (ROW(name, contact) = $1)
+2024-03-21 17:15:36.017 GMT [89] CONTEXT:  SQL statement "DELETE FROM __tmp_delta_del_contactsportonormalized WHERE ROW(NAME,CONTACT) = NEW"
+    PL/pgSQL function contactsportonormalized_update() line 13 at SQL statement
+2024-03-21 17:15:36.017 GMT [89] LOG:  duration: 0.089 ms  plan:
+    Query Text: INSERT INTO __tmp_delta_ins_contactsportonormalized SELECT (NEW).*
+    Insert on __tmp_delta_ins_contactsportonormalized  (cost=0.00..0.01 rows=0 width=0) (actual time=0.087..0.088 rows=0 loops=1)
+      Buffers: local dirtied=1 written=1
+      ->  Result  (cost=0.00..0.01 rows=1 width=64) (actual time=0.001..0.001 rows=1 loops=1)
+2024-03-21 17:15:36.017 GMT [89] CONTEXT:  SQL statement "INSERT INTO __tmp_delta_ins_contactsportonormalized SELECT (NEW).*"
+    PL/pgSQL function contactsportonormalized_update() line 14 at SQL statement
+2024-03-21 17:15:36.017 GMT [89] LOG:  duration: 2.608 ms  plan:
+    Query Text: EXPLAIN ANALYZE INSERT INTO contactsportonormalized VALUES ('Pereira','pereira@gmail.com');
+    Insert on contactsportonormalized  (cost=0.00..0.01 rows=0 width=0) (actual time=2.607..2.607 rows=0 loops=1)
+      Buffers: shared hit=751 dirtied=36 written=1, local dirtied=1 written=1
+      ->  Result  (cost=0.00..0.01 rows=1 width=64) (actual time=0.001..0.001 rows=1 loops=1)
+    Trigger contactsportonormalized_trigger_materialization: time=2.059 calls=1
+    Trigger contactsportonormalized_trigger_update: time=0.541 calls=1
+2024-03-21 17:15:36.019 GMT [89] LOG:  duration: 0.013 ms  plan:
+    Query Text: NOT EXISTS (SELECT * FROM information_schema.tables WHERE table_name = 'contactsportonormalized_delta_action_flag')
+    Result  (cost=17.89..17.90 rows=1 width=1) (actual time=0.009..0.011 rows=1 loops=1)
+      Buffers: shared hit=4
+      InitPlan 1 (returns $2)
+        ->  Nested Loop  (cost=0.68..17.89 rows=1 width=0) (actual time=0.008..0.009 rows=0 loops=1)
+              Join Filter: (c.relnamespace = nc.oid)
+              Buffers: shared hit=4
+              ->  Nested Loop Left Join  (cost=0.68..16.80 rows=1 width=4) (actual time=0.008..0.009 rows=0 loops=1)
+                    Buffers: shared hit=4
+                    ->  Index Scan using pg_class_relname_nsp_index on pg_class c  (cost=0.27..8.33 rows=1 width=8) (actual time=0.007..0.008 rows=0 loops=1)
+                          Index Cond: (relname = 'contactsportonormalized_delta_action_flag'::name)
+                          Filter: ((relkind = ANY ('{r,v,f,p}'::"char"[])) AND (pg_has_role(relowner, 'USAGE'::text) OR has_table_privilege(oid, 'SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER'::text) OR has_any_column_privilege(oid, 'SELECT, INSERT, UPDATE, REFERENCES'::text)))
+                          Buffers: shared hit=4
+                    ->  Nested Loop  (cost=0.41..8.46 rows=1 width=4) (never executed)
+                          ->  Index Scan using pg_type_oid_index on pg_type t  (cost=0.28..8.29 rows=1 width=8) (never executed)
+                                Index Cond: (oid = c.reloftype)
+                          ->  Index Only Scan using pg_namespace_oid_index on pg_namespace nt  (cost=0.13..0.16 rows=1 width=4) (never executed)
+                                Index Cond: (oid = t.typnamespace)
+                                Heap Fetches: 0
+              ->  Seq Scan on pg_namespace nc  (cost=0.00..1.05 rows=3 width=4) (never executed)
+                    Filter: (NOT pg_is_other_temp_schema(oid))
+2024-03-21 17:15:36.019 GMT [89] CONTEXT:  SQL expression "NOT EXISTS (SELECT * FROM information_schema.tables WHERE table_name = 'contactsportonormalized_delta_action_flag')"
+    PL/pgSQL function contactsportonormalized_delta_action() line 23 at IF
+2024-03-21 17:15:36.019 GMT [89] LOG:  duration: 0.437 ms  plan:
+    Query Text: CREATE TEMPORARY TABLE contactsportonormalized_delta_action_flag ON COMMIT DROP AS (SELECT true as finish)
+    Result  (cost=0.00..0.01 rows=1 width=1) (actual time=0.001..0.001 rows=1 loops=1)
+2024-03-21 17:15:36.019 GMT [89] CONTEXT:  SQL statement "CREATE TEMPORARY TABLE contactsportonormalized_delta_action_flag ON COMMIT DROP AS (SELECT true as finish)"
+    PL/pgSQL function contactsportonormalized_delta_action() line 25 at SQL statement
+bson_append_array(): invalid array detected. first element of array parameter is not "0".
+2024-03-21 17:15:36.023 GMT [89] LOG:  duration: 2.007 ms  plan:
+    Query Text: EXISTS (SELECT  
+    FROM (SELECT  
+    FROM (SELECT  
+    FROM (SELECT  
+    FROM public.playersbase AS playersbase_a3_0, (SELECT __tmp_delta_ins_contactsportonormalized_a2_0.CONTACT AS COL0, __tmp_delta_ins_contactsportonormalized_a2_0.NAME AS COL1 
+    FROM __tmp_delta_ins_contactsportonormalized AS __tmp_delta_ins_contactsportonormalized_a2_0   UNION SELECT contactsportonormalized_a2_0.CONTACT AS COL0, contactsportonormalized_a2_0.NAME AS COL1 
+    FROM public.contactsportonormalized AS contactsportonormalized_a2_0 
+    WHERE NOT EXISTS ( SELECT * 
+    FROM __tmp_delta_del_contactsportonormalized AS __tmp_delta_del_contactsportonormalized_a2 
+    WHERE __tmp_delta_del_contactsportonormalized_a2.CONTACT = contactsportonormalized_a2_0.CONTACT AND __tmp_delta_del_contactsportonormalized_a2.NAME = contactsportonormalized_a2_0.NAME ) ) AS p_1_a2_1 
+    WHERE p_1_a2_1.COL1 = playersbase_a3_0.NAME AND playersbase_a3_0.ADDRESS  <>  'Porto' ) AS p_0_a0_0  ) AS bot_a0_0  ) AS __dummy__ )
+    Result  (cost=544.88..544.89 rows=1 width=1) (actual time=2.001..2.005 rows=1 loops=1)
+      Buffers: local hit=1
+      InitPlan 1 (returns $0)
+        ->  Nested Loop  (cost=541.84..71086.94 rows=23150 width=0) (actual time=1.998..2.001 rows=0 loops=1)
+              Join Filter: (playersbase_a3_0.name = __tmp_delta_ins_contactsportonormalized_a2_0.name)
+              Rows Removed by Join Filter: 4
+              Buffers: local hit=1
+              ->  HashAggregate  (cost=516.84..563.14 rows=4630 width=64) (actual time=1.265..1.293 rows=4 loops=1)
+                    Group Key: __tmp_delta_ins_contactsportonormalized_a2_0.contact, __tmp_delta_ins_contactsportonormalized_a2_0.name
+                    Batches: 1  Memory Usage: 217kB
+                    Buffers: local hit=1
+                    ->  Append  (cost=0.00..493.69 rows=4630 width=64) (actual time=0.006..1.234 rows=4 loops=1)
+                          Buffers: local hit=1
+                          ->  Seq Scan on __tmp_delta_ins_contactsportonormalized __tmp_delta_ins_contactsportonormalized_a2_0  (cost=0.00..18.80 rows=880 width=64) (actual time=0.006..0.006 rows=1 loops=1)
+                                Buffers: local hit=1
+                          ->  Hash Anti Join  (cost=47.00..405.44 rows=3750 width=64) (actual time=1.221..1.226 rows=3 loops=1)
+                                Hash Cond: ((playerscontacts_a3_1.contact = __tmp_delta_del_contactsportonormalized_a2.contact) AND (playerscontacts_a3_1.name = __tmp_delta_del_contactsportonormalized_a2.name))
+                                ->  Foreign Scan  (cost=15.00..35.00 rows=5000 width=64) (actual time=1.168..1.172 rows=3 loops=1)
+                                      Foreign Namespace: (test."PlayersBase" playersbase_a3_0) INNER JOIN (test."Contacts" playerscontacts_a3_1)
+                                ->  Hash  (cost=18.80..18.80 rows=880 width=64) (actual time=0.005..0.005 rows=0 loops=1)
+                                      Buckets: 1024  Batches: 1  Memory Usage: 8kB
+                                      ->  Seq Scan on __tmp_delta_del_contactsportonormalized __tmp_delta_del_contactsportonormalized_a2  (cost=0.00..18.80 rows=880 width=64) (actual time=0.004..0.004 rows=0 loops=1)
+              ->  Materialize  (cost=25.00..1030.00 rows=1000 width=32) (actual time=0.175..0.176 rows=1 loops=4)
+                    ->  Foreign Scan on playersbase playersbase_a3_0  (cost=25.00..1025.00 rows=1000 width=32) (actual time=0.696..0.698 rows=1 loops=1)
+                          Foreign Namespace: test.PlayersBase
+2024-03-21 17:15:36.023 GMT [89] CONTEXT:  SQL expression "EXISTS (SELECT  
+    FROM (SELECT  
+    FROM (SELECT  
+    FROM (SELECT  
+    FROM public.playersbase AS playersbase_a3_0, (SELECT __tmp_delta_ins_contactsportonormalized_a2_0.CONTACT AS COL0, __tmp_delta_ins_contactsportonormalized_a2_0.NAME AS COL1 
+    FROM __tmp_delta_ins_contactsportonormalized AS __tmp_delta_ins_contactsportonormalized_a2_0   UNION SELECT contactsportonormalized_a2_0.CONTACT AS COL0, contactsportonormalized_a2_0.NAME AS COL1 
+    FROM public.contactsportonormalized AS contactsportonormalized_a2_0 
+    WHERE NOT EXISTS ( SELECT * 
+    FROM __tmp_delta_del_contactsportonormalized AS __tmp_delta_del_contactsportonormalized_a2 
+    WHERE __tmp_delta_del_contactsportonormalized_a2.CONTACT = contactsportonormalized_a2_0.CONTACT AND __tmp_delta_del_contactsportonormalized_a2.NAME = contactsportonormalized_a2_0.NAME ) ) AS p_1_a2_1 
+    WHERE p_1_a2_1.COL1 = playersbase_a3_0.NAME AND playersbase_a3_0.ADDRESS  <>  'Porto' ) AS p_0_a0_0  ) AS bot_a0_0  ) AS __dummy__ )"
+    PL/pgSQL function contactsportonormalized_delta_action() line 26 at IF
+2024-03-21 17:15:36.027 GMT [89] LOG:  duration: 2.143 ms  plan:
+    Query Text: EXISTS (SELECT  
+    FROM (SELECT  
+    FROM (SELECT  
+    FROM (SELECT  
+    FROM public.playersbase AS playersbase_a3_0, public.playersbase AS playersbase_a3_1 
+    WHERE playersbase_a3_1.NAME = playersbase_a3_0.NAME AND playersbase_a3_0.ADDRESS  <>  playersbase_a3_1.ADDRESS  UNION ALL SELECT  
+    FROM public.playerscontacts AS playerscontacts_a3_0 
+    WHERE NOT EXISTS ( SELECT * 
+    FROM (SELECT playersbase_a3_0.NAME AS COL0 
+    FROM public.playersbase AS playersbase_a3_0   UNION SELECT playersbase_a3_0.NAME AS COL0 
+    FROM public.playersbase AS playersbase_a3_0  ) AS p_1_a1 
+    WHERE p_1_a1.COL0 = playerscontacts_a3_0.NAME ) ) AS p_0_a0_0  ) AS bot_a0_0  ) AS __dummy__ )
+    Result  (cost=15.60..15.61 rows=1 width=1) (actual time=2.137..2.140 rows=1 loops=1)
+      InitPlan 1 (returns $0)
+        ->  Append  (cost=15.00..3311.56 rows=5475 width=0) (actual time=2.135..2.138 rows=0 loops=1)
+              ->  Foreign Scan  (cost=15.00..35.00 rows=4975 width=0) (actual time=1.131..1.132 rows=0 loops=1)
+                    Foreign Namespace: (test."PlayersBase" playersbase_a3_0) INNER JOIN (test."PlayersBase" playersbase_a3_1)
+              ->  Hash Anti Join  (cost=2175.00..3194.44 rows=500 width=0) (actual time=0.983..0.985 rows=0 loops=1)
+                    Hash Cond: (playerscontacts_a3_0.name = playersbase_a3_0_1.name)
+                    ->  Foreign Scan on playerscontacts playerscontacts_a3_0  (cost=25.00..1025.00 rows=1000 width=32) (actual time=0.397..0.424 rows=4 loops=1)
+                          Foreign Namespace: test.Contacts
+                    ->  Hash  (cost=2125.00..2125.00 rows=2000 width=32) (actual time=0.535..0.536 rows=3 loops=1)
+                          Buckets: 2048  Batches: 1  Memory Usage: 17kB
+                          ->  HashAggregate  (cost=2085.00..2105.00 rows=2000 width=32) (actual time=0.515..0.533 rows=3 loops=1)
+                                Group Key: playersbase_a3_0_1.name
+                                Batches: 1  Memory Usage: 121kB
+                                ->  Append  (cost=25.00..2080.00 rows=2000 width=32) (actual time=0.326..0.505 rows=6 loops=1)
+                                      ->  Foreign Scan on playersbase playersbase_a3_0_1  (cost=25.00..1025.00 rows=1000 width=32) (actual time=0.326..0.330 rows=3 loops=1)
+                                            Foreign Namespace: test.PlayersBase
+                                      ->  Foreign Scan on playersbase playersbase_a3_0_2  (cost=25.00..1025.00 rows=1000 width=32) (actual time=0.170..0.173 rows=3 loops=1)
+                                            Foreign Namespace: test.PlayersBase
+2024-03-21 17:15:36.027 GMT [89] CONTEXT:  SQL expression "EXISTS (SELECT  
+    FROM (SELECT  
+    FROM (SELECT  
+    FROM (SELECT  
+    FROM public.playersbase AS playersbase_a3_0, public.playersbase AS playersbase_a3_1 
+    WHERE playersbase_a3_1.NAME = playersbase_a3_0.NAME AND playersbase_a3_0.ADDRESS  <>  playersbase_a3_1.ADDRESS  UNION ALL SELECT  
+    FROM public.playerscontacts AS playerscontacts_a3_0 
+    WHERE NOT EXISTS ( SELECT * 
+    FROM (SELECT playersbase_a3_0.NAME AS COL0 
+    FROM public.playersbase AS playersbase_a3_0   UNION SELECT playersbase_a3_0.NAME AS COL0 
+    FROM public.playersbase AS playersbase_a3_0  ) AS p_1_a1 
+    WHERE p_1_a1.COL0 = playerscontacts_a3_0.NAME ) ) AS p_0_a0_0  ) AS bot_a0_0  ) AS __dummy__ )"
+    PL/pgSQL function contactsportonormalized_delta_action() line 40 at IF
+2024-03-21 17:15:36.027 GMT [89] LOG:  duration: 0.010 ms  plan:
+    Query Text: SELECT array_agg(tbl)                      FROM __tmp_delta_ins_contactsportonormalized AS tbl
+    Aggregate  (cost=21.00..21.01 rows=1 width=32) (actual time=0.009..0.009 rows=1 loops=1)
+      Buffers: local hit=1
+      ->  Seq Scan on __tmp_delta_ins_contactsportonormalized tbl  (cost=0.00..18.80 rows=880 width=88) (actual time=0.006..0.006 rows=1 loops=1)
+            Buffers: local hit=1
+2024-03-21 17:15:36.027 GMT [89] CONTEXT:  SQL statement "SELECT array_agg(tbl)                      FROM __tmp_delta_ins_contactsportonormalized AS tbl"
+    PL/pgSQL function contactsportonormalized_delta_action() line 55 at SQL statement
+2024-03-21 17:15:36.028 GMT [89] LOG:  duration: 0.003 ms  plan:
+    Query Text: SELECT array_agg(tbl)                      FROM __tmp_delta_del_contactsportonormalized as tbl
+    Aggregate  (cost=21.00..21.01 rows=1 width=32) (actual time=0.002..0.002 rows=1 loops=1)
+      ->  Seq Scan on __tmp_delta_del_contactsportonormalized tbl  (cost=0.00..18.80 rows=880 width=88) (actual time=0.001..0.001 rows=0 loops=1)
+2024-03-21 17:15:36.028 GMT [89] CONTEXT:  SQL statement "SELECT array_agg(tbl)                      FROM __tmp_delta_del_contactsportonormalized as tbl"
+    PL/pgSQL function contactsportonormalized_delta_action() line 56 at SQL statement
+2024-03-21 17:15:36.028 GMT [89] LOG:  duration: 0.006 ms  plan:
+    Query Text: select count(*)                     FROM __tmp_delta_ins_contactsportonormalized
+    Aggregate  (cost=21.00..21.01 rows=1 width=8) (actual time=0.005..0.005 rows=1 loops=1)
+      Buffers: local hit=1
+      ->  Seq Scan on __tmp_delta_ins_contactsportonormalized  (cost=0.00..18.80 rows=880 width=0) (actual time=0.003..0.004 rows=1 loops=1)
+            Buffers: local hit=1
+2024-03-21 17:15:36.028 GMT [89] CONTEXT:  SQL statement "select count(*)                     FROM __tmp_delta_ins_contactsportonormalized"
+    PL/pgSQL function contactsportonormalized_delta_action() line 57 at SQL statement
+2024-03-21 17:15:36.028 GMT [89] LOG:  duration: 0.020 ms  plan:
+    Query Text: select count(*)                     FROM __tmp_delta_del_contactsportonormalized
+    Aggregate  (cost=21.00..21.01 rows=1 width=8) (actual time=0.020..0.020 rows=1 loops=1)
+      ->  Seq Scan on __tmp_delta_del_contactsportonormalized  (cost=0.00..18.80 rows=880 width=0) (actual time=0.019..0.019 rows=0 loops=1)
+2024-03-21 17:15:36.028 GMT [89] CONTEXT:  SQL statement "select count(*)                     FROM __tmp_delta_del_contactsportonormalized"
+    PL/pgSQL function contactsportonormalized_delta_action() line 58 at SQL statement
+2024-03-21 17:15:36.029 GMT [89] LOG:  duration: 0.017 ms  plan:
+    Query Text: WITH __tmp_delta_del_contactsportonormalized_ar AS (SELECT * FROM unnest(array_delta_del) as array_delta_del_alias limit delta_del_size),
+                __tmp_delta_ins_contactsportonormalized_ar as (SELECT * FROM unnest(array_delta_ins) as array_delta_ins_alias limit delta_ins_size)
+                SELECT array_agg(tbl)                                      FROM (SELECT (ROW(COL0,COL1,COL2) :: public.playerscontacts).* 
+                FROM (SELECT delta_del_playerscontacts_a3_0.COL0 AS COL0, delta_del_playerscontacts_a3_0.COL1 AS COL1, delta_del_playerscontacts_a3_0.COL2 AS COL2 
+    FROM (SELECT p_0_a3_0.COL0 AS COL0, p_0_a3_0.COL1 AS COL1, p_0_a3_0.COL2 AS COL2 
+    FROM (SELECT playerscontacts_a3_2._ID AS COL0, playerscontacts_a3_2.NAME AS COL1, playerscontacts_a3_2.CONTACT AS COL2 
+    FROM __tmp_delta_del_contactsportonormalized_ar AS __tmp_delta_del_contactsportonormalized_ar_a2_0, public.playersbase AS playersbase_a3_1, public.playerscontacts AS playerscontacts_a3_2 
+    WHERE playerscontacts_a3_2.CONTACT = __tmp_delta_del_contactsportonormalized_ar_a2_0.CONTACT AND playerscontacts_a3_2.NAME = playersbase_a3_1.NAME AND playerscontacts_a3_2.NAME = __tmp_delta_del_contactsportonormalized_ar_a2_0.NAME AND playersbase_a3_1.ADDRESS = 'Porto' AND NOT EXISTS ( SELECT * 
+    FROM (SELECT playerscontacts_a3_1._ID AS COL0, playerscontacts_a3_1.NAME AS COL1, playerscontacts_a3_1.CONTACT AS COL2 
+    FROM public.playersbase AS playersbase_a3_0, public.playerscontacts AS playerscontacts_a3_1 
+    WHERE playerscontacts_a3_1.NAME = playersbase_a3_0.NAME AND playersbase_a3_0.ADDRESS = 'Porto' AND NOT EXISTS ( SELECT * 
+    FROM (SELECT playerscontacts_a3_1.NAME AS COL0, playerscontacts_a3_1.CONTACT AS COL1 
+    FROM public.playersbase AS playersbase_a3_0, public.playerscontacts AS playerscontacts_a3_1 
+    WHERE playerscontacts_a3_1.NAME = playersbase_a3_0.NAME AND playersbase_a3_0.ADDRESS = 'Porto' ) AS p_2_a2 
+    WHERE p_2_a2.COL1 = playerscontacts_a3_1.CONTACT AND p_2_a2.COL0 = playerscontacts_a3_1.NAME ) ) AS p_1_a3 
+    WHERE p_1_a3.COL2 = playerscontacts_a3_2.CONTACT AND p_1_a3.COL1 = playerscontacts_a3_2.NAME AND p_1_a3.COL0 = playerscontacts_a3_2._ID ) ) AS p_0_a3_0  ) AS delta_del_playerscontacts_a3_0  ) AS delta_del_playerscontacts_extra_alias) AS tbl
+    Aggregate  (cost=903.82..903.83 rows=1 width=32) (actual time=0.013..0.015 rows=1 loops=1)
+      ->  Nested Loop Anti Join  (cost=699.42..903.81 rows=5 width=128) (actual time=0.011..0.013 rows=0 loops=1)
+            Join Filter: ((playerscontacts_a3_1.contact = playerscontacts_a3_2.contact) AND (playerscontacts_a3_1.name = playerscontacts_a3_2.name) AND (playerscontacts_a3_1._id = playerscontacts_a3_2._id))
+            ->  Hash Join  (cost=15.04..72.55 rows=1 width=128) (actual time=0.011..0.012 rows=0 loops=1)
+                  Hash Cond: ((playerscontacts_a3_2.contact = __tmp_delta_del_contactsportonormalized_ar_a2_0.contact) AND (playerscontacts_a3_2.name = __tmp_delta_del_contactsportonormalized_ar_a2_0.name))
+                  ->  Foreign Scan  (cost=15.00..35.00 rows=5000 width=160) (never executed)
+                        Foreign Namespace: (test."PlayersBase" playersbase_a3_1) INNER JOIN (test."Contacts" playerscontacts_a3_2)
+                  ->  Hash  (cost=0.02..0.02 rows=1 width=64) (actual time=0.003..0.003 rows=0 loops=1)
+                        Buckets: 1024  Batches: 1  Memory Usage: 8kB
+                        ->  Subquery Scan on __tmp_delta_del_contactsportonormalized_ar_a2_0  (cost=0.00..0.02 rows=1 width=64) (actual time=0.002..0.002 rows=0 loops=1)
+                              ->  Limit  (cost=0.00..0.01 rows=1 width=64) (actual time=0.001..0.001 rows=0 loops=1)
+                                    ->  Function Scan on unnest array_delta_del_alias  (cost=0.00..0.01 rows=1 width=64) (never executed)
+            ->  Merge Anti Join  (cost=684.39..765.64 rows=3750 width=128) (never executed)
+                  Merge Cond: ((playerscontacts_a3_1.contact = playerscontacts_a3_1_1.contact) AND (playerscontacts_a3_1.name = playerscontacts_a3_1_1.name))
+                  ->  Sort  (cost=342.19..354.69 rows=5000 width=128) (never executed)
+                        Sort Key: playerscontacts_a3_1.contact, playerscontacts_a3_1.name
+                        ->  Foreign Scan  (cost=15.00..35.00 rows=5000 width=128) (never executed)
+                              Foreign Namespace: (test."PlayersBase" playersbase_a3_0) INNER JOIN (test."Contacts" playerscontacts_a3_1)
+                  ->  Sort  (cost=342.19..354.69 rows=5000 width=64) (never executed)
+                        Sort Key: playerscontacts_a3_1_1.contact, playerscontacts_a3_1_1.name
+                        ->  Foreign Scan  (cost=15.00..35.00 rows=5000 width=64) (never executed)
+                              Foreign Namespace: (test."PlayersBase" playersbase_a3_0) INNER JOIN (test."Contacts" playerscontacts_a3_1)
+2024-03-21 17:15:36.029 GMT [89] CONTEXT:  SQL statement "WITH __tmp_delta_del_contactsportonormalized_ar AS (SELECT * FROM unnest(array_delta_del) as array_delta_del_alias limit delta_del_size),
+                __tmp_delta_ins_contactsportonormalized_ar as (SELECT * FROM unnest(array_delta_ins) as array_delta_ins_alias limit delta_ins_size)
+                SELECT array_agg(tbl)                                      FROM (SELECT (ROW(COL0,COL1,COL2) :: public.playerscontacts).* 
+                FROM (SELECT delta_del_playerscontacts_a3_0.COL0 AS COL0, delta_del_playerscontacts_a3_0.COL1 AS COL1, delta_del_playerscontacts_a3_0.COL2 AS COL2 
+    FROM (SELECT p_0_a3_0.COL0 AS COL0, p_0_a3_0.COL1 AS COL1, p_0_a3_0.COL2 AS COL2 
+    FROM (SELECT playerscontacts_a3_2._ID AS COL0, playerscontacts_a3_2.NAME AS COL1, playerscontacts_a3_2.CONTACT AS COL2 
+    FROM __tmp_delta_del_contactsportonormalized_ar AS __tmp_delta_del_contactsportonormalized_ar_a2_0, public.playersbase AS playersbase_a3_1, public.playerscontacts AS playerscontacts_a3_2 
+    WHERE playerscontacts_a3_2.CONTACT = __tmp_delta_del_contactsportonormalized_ar_a2_0.CONTACT AND playerscontacts_a3_2.NAME = playersbase_a3_1.NAME AND playerscontacts_a3_2.NAME = __tmp_delta_del_contactsportonormalized_ar_a2_0.NAME AND playersbase_a3_1.ADDRESS = 'Porto' AND NOT EXISTS ( SELECT * 
+    FROM (SELECT playerscontacts_a3_1._ID AS COL0, playerscontacts_a3_1.NAME AS COL1, playerscontacts_a3_1.CONTACT AS COL2 
+    FROM public.playersbase AS playersbase_a3_0, public.playerscontacts AS playerscontacts_a3_1 
+    WHERE playerscontacts_a3_1.NAME = playersbase_a3_0.NAME AND playersbase_a3_0.ADDRESS = 'Porto' AND NOT EXISTS ( SELECT * 
+    FROM (SELECT playerscontacts_a3_1.NAME AS COL0, playerscontacts_a3_1.CONTACT AS COL1 
+    FROM public.playersbase AS playersbase_a3_0, public.playerscontacts AS playerscontacts_a3_1 
+    WHERE playerscontacts_a3_1.NAME = playersbase_a3_0.NAME AND playersbase_a3_0.ADDRESS = 'Porto' ) AS p_2_a2 
+    WHERE p_2_a2.COL1 = playerscontacts_a3_1.CONTACT AND p_2_a2.COL0 = playerscontacts_a3_1.NAME ) ) AS p_1_a3 
+    WHERE p_1_a3.COL2 = playerscontacts_a3_2.CONTACT AND p_1_a3.COL1 = playerscontacts_a3_2.NAME AND p_1_a3.COL0 = playerscontacts_a3_2._ID ) ) AS p_0_a3_0  ) AS delta_del_playerscontacts_a3_0  ) AS delta_del_playerscontacts_extra_alias) AS tbl"
+    PL/pgSQL function contactsportonormalized_delta_action() line 60 at SQL statement
+2024-03-21 17:15:36.033 GMT [89] LOG:  duration: 2.149 ms  plan:
+    Query Text: WITH __tmp_delta_del_contactsportonormalized_ar AS (SELECT * FROM unnest(array_delta_del) as array_delta_del_alias limit delta_del_size),
+                __tmp_delta_ins_contactsportonormalized_ar as (SELECT * FROM unnest(array_delta_ins) as array_delta_ins_alias limit delta_ins_size)
+                SELECT array_agg(tbl)                                  FROM (SELECT (ROW(COL0,COL1,COL2) :: public.playersbase).* 
+                FROM (SELECT delta_ins_playersbase_a3_0.COL0 AS COL0, delta_ins_playersbase_a3_0.COL1 AS COL1, delta_ins_playersbase_a3_0.COL2 AS COL2 
+    FROM (SELECT p_0_a3_0.COL0 AS COL0, p_0_a3_0.COL1 AS COL1, p_0_a3_0.COL2 AS COL2 
+    FROM (SELECT '' AS COL0, __tmp_delta_ins_contactsportonormalized_ar_a2_0.NAME AS COL1, 'Porto' AS COL2 
+    FROM __tmp_delta_ins_contactsportonormalized_ar AS __tmp_delta_ins_contactsportonormalized_ar_a2_0 
+    WHERE NOT EXISTS ( SELECT * 
+    FROM (SELECT '' AS COL0, playerscontacts_a3_1.NAME AS COL1, 'Porto' AS COL2 
+    FROM public.playersbase AS playersbase_a3_0, public.playerscontacts AS playerscontacts_a3_1 
+    WHERE playerscontacts_a3_1.NAME = playersbase_a3_0.NAME AND playersbase_a3_0.ADDRESS = 'Porto' AND NOT EXISTS ( SELECT * 
+    FROM public.playersbase AS playersbase_a3 
+    WHERE playersbase_a3.NAME = playerscontacts_a3_1.NAME ) ) AS p_1_a3 
+    WHERE p_1_a3.COL2 = 'Porto' AND p_1_a3.COL1 = __tmp_delta_ins_contactsportonormalized_ar_a2_0.NAME AND p_1_a3.COL0 = '' ) AND NOT EXISTS ( SELECT * 
+    FROM public.playersbase AS playersbase_a3 
+    WHERE playersbase_a3.NAME = __tmp_delta_ins_contactsportonormalized_ar_a2_0.NAME ) ) AS p_0_a3_0  ) AS delta_ins_playersbase_a3_0  ) AS delta_ins_playersbase_extra_alias) AS tbl
+    Aggregate  (cost=2235.34..2235.35 rows=1 width=32) (actual time=2.126..2.130 rows=1 loops=1)
+      ->  Nested Loop Anti Join  (cost=1077.50..2235.34 rows=1 width=32) (actual time=2.112..2.116 rows=1 loops=1)
+            Join Filter: (playersbase_a3.name = array_delta_ins_alias.name)
+            Rows Removed by Join Filter: 3
+            ->  Nested Loop Anti Join  (cost=1052.50..1197.84 rows=1 width=32) (actual time=1.667..1.671 rows=1 loops=1)
+                  Join Filter: (playerscontacts_a3_1.name = array_delta_ins_alias.name)
+                  ->  Limit  (cost=0.00..0.01 rows=1 width=64) (actual time=0.008..0.009 rows=1 loops=1)
+                        ->  Function Scan on unnest array_delta_ins_alias  (cost=0.00..0.01 rows=1 width=64) (actual time=0.007..0.007 rows=1 loops=1)
+                  ->  Hash Anti Join  (cost=1052.50..1166.56 rows=2500 width=32) (actual time=1.657..1.660 rows=0 loops=1)
+                        Hash Cond: (playerscontacts_a3_1.name = playersbase_a3_1.name)
+                        ->  Foreign Scan  (cost=15.00..35.00 rows=5000 width=32) (actual time=1.089..1.094 rows=3 loops=1)
+                              Foreign Namespace: (test."PlayersBase" playersbase_a3_0) INNER JOIN (test."Contacts" playerscontacts_a3_1)
+                        ->  Hash  (cost=1025.00..1025.00 rows=1000 width=32) (actual time=0.544..0.544 rows=3 loops=1)
+                              Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                              ->  Foreign Scan on playersbase playersbase_a3_1  (cost=25.00..1025.00 rows=1000 width=32) (actual time=0.530..0.533 rows=3 loops=1)
+                                    Foreign Namespace: test.PlayersBase
+            ->  Foreign Scan on playersbase playersbase_a3  (cost=25.00..1025.00 rows=1000 width=32) (actual time=0.437..0.439 rows=3 loops=1)
+                  Foreign Namespace: test.PlayersBase
+2024-03-21 17:15:36.033 GMT [89] CONTEXT:  SQL statement "WITH __tmp_delta_del_contactsportonormalized_ar AS (SELECT * FROM unnest(array_delta_del) as array_delta_del_alias limit delta_del_size),
+                __tmp_delta_ins_contactsportonormalized_ar as (SELECT * FROM unnest(array_delta_ins) as array_delta_ins_alias limit delta_ins_size)
+                SELECT array_agg(tbl)                                  FROM (SELECT (ROW(COL0,COL1,COL2) :: public.playersbase).* 
+                FROM (SELECT delta_ins_playersbase_a3_0.COL0 AS COL0, delta_ins_playersbase_a3_0.COL1 AS COL1, delta_ins_playersbase_a3_0.COL2 AS COL2 
+    FROM (SELECT p_0_a3_0.COL0 AS COL0, p_0_a3_0.COL1 AS COL1, p_0_a3_0.COL2 AS COL2 
+    FROM (SELECT '' AS COL0, __tmp_delta_ins_contactsportonormalized_ar_a2_0.NAME AS COL1, 'Porto' AS COL2 
+    FROM __tmp_delta_ins_contactsportonormalized_ar AS __tmp_delta_ins_contactsportonormalized_ar_a2_0 
+    WHERE NOT EXISTS ( SELECT * 
+    FROM (SELECT '' AS COL0, playerscontacts_a3_1.NAME AS COL1, 'Porto' AS COL2 
+    FROM public.playersbase AS playersbase_a3_0, public.playerscontacts AS playerscontacts_a3_1 
+    WHERE playerscontacts_a3_1.NAME = playersbase_a3_0.NAME AND playersbase_a3_0.ADDRESS = 'Porto' AND NOT EXISTS ( SELECT * 
+    FROM public.playersbase AS playersbase_a3 
+    WHERE playersbase_a3.NAME = playerscontacts_a3_1.NAME ) ) AS p_1_a3 
+    WHERE p_1_a3.COL2 = 'Porto' AND p_1_a3.COL1 = __tmp_delta_ins_contactsportonormalized_ar_a2_0.NAME AND p_1_a3.COL0 = '' ) AND NOT EXISTS ( SELECT * 
+    FROM public.playersbase AS playersbase_a3 
+    WHERE playersbase_a3.NAME = __tmp_delta_ins_contactsportonormalized_ar_a2_0.NAME ) ) AS p_0_a3_0  ) AS delta_ins_playersbase_a3_0  ) AS delta_ins_playersbase_extra_alias) AS tbl"
+    PL/pgSQL function contactsportonormalized_delta_action() line 78 at SQL statement
+2024-03-21 17:15:36.034 GMT [89] LOG:  duration: 0.643 ms  plan:
+    Query Text: WITH __tmp_delta_del_contactsportonormalized_ar AS (SELECT * FROM unnest(array_delta_del) as array_delta_del_alias limit delta_del_size),
+                __tmp_delta_ins_contactsportonormalized_ar as (SELECT * FROM unnest(array_delta_ins) as array_delta_ins_alias limit delta_ins_size)
+                SELECT array_agg(tbl)                                      FROM (SELECT (ROW(COL0,COL1,COL2) :: public.playerscontacts).* 
+                FROM (SELECT delta_ins_playerscontacts_a3_0.COL0 AS COL0, delta_ins_playerscontacts_a3_0.COL1 AS COL1, delta_ins_playerscontacts_a3_0.COL2 AS COL2 
+    FROM (SELECT p_0_a3_0.COL0 AS COL0, p_0_a3_0.COL1 AS COL1, p_0_a3_0.COL2 AS COL2 
+    FROM (SELECT '' AS COL0, __tmp_delta_ins_contactsportonormalized_ar_a2_0.NAME AS COL1, __tmp_delta_ins_contactsportonormalized_ar_a2_0.CONTACT AS COL2 
+    FROM __tmp_delta_ins_contactsportonormalized_ar AS __tmp_delta_ins_contactsportonormalized_ar_a2_0 
+    WHERE NOT EXISTS ( SELECT * 
+    FROM public.playerscontacts AS playerscontacts_a3 
+    WHERE playerscontacts_a3.CONTACT = __tmp_delta_ins_contactsportonormalized_ar_a2_0.CONTACT AND playerscontacts_a3.NAME = __tmp_delta_ins_contactsportonormalized_ar_a2_0.NAME ) ) AS p_0_a3_0  ) AS delta_ins_playerscontacts_a3_0  ) AS delta_ins_playerscontacts_extra_alias) AS tbl
+    Aggregate  (cost=1040.03..1040.04 rows=1 width=32) (actual time=0.640..0.641 rows=1 loops=1)
+      ->  Nested Loop Anti Join  (cost=25.00..1040.02 rows=1 width=64) (actual time=0.630..0.631 rows=1 loops=1)
+            Join Filter: ((playerscontacts_a3.contact = array_delta_ins_alias.contact) AND (playerscontacts_a3.name = array_delta_ins_alias.name))
+            Rows Removed by Join Filter: 4
+            ->  Limit  (cost=0.00..0.01 rows=1 width=64) (actual time=0.006..0.007 rows=1 loops=1)
+                  ->  Function Scan on unnest array_delta_ins_alias  (cost=0.00..0.01 rows=1 width=64) (actual time=0.005..0.005 rows=1 loops=1)
+            ->  Foreign Scan on playerscontacts playerscontacts_a3  (cost=25.00..1025.00 rows=1000 width=64) (actual time=0.613..0.617 rows=4 loops=1)
+                  Foreign Namespace: test.Contacts
+2024-03-21 17:15:36.034 GMT [89] CONTEXT:  SQL statement "WITH __tmp_delta_del_contactsportonormalized_ar AS (SELECT * FROM unnest(array_delta_del) as array_delta_del_alias limit delta_del_size),
+                __tmp_delta_ins_contactsportonormalized_ar as (SELECT * FROM unnest(array_delta_ins) as array_delta_ins_alias limit delta_ins_size)
+                SELECT array_agg(tbl)                                      FROM (SELECT (ROW(COL0,COL1,COL2) :: public.playerscontacts).* 
+                FROM (SELECT delta_ins_playerscontacts_a3_0.COL0 AS COL0, delta_ins_playerscontacts_a3_0.COL1 AS COL1, delta_ins_playerscontacts_a3_0.COL2 AS COL2 
+    FROM (SELECT p_0_a3_0.COL0 AS COL0, p_0_a3_0.COL1 AS COL1, p_0_a3_0.COL2 AS COL2 
+    FROM (SELECT '' AS COL0, __tmp_delta_ins_contactsportonormalized_ar_a2_0.NAME AS COL1, __tmp_delta_ins_contactsportonormalized_ar_a2_0.CONTACT AS COL2 
+    FROM __tmp_delta_ins_contactsportonormalized_ar AS __tmp_delta_ins_contactsportonormalized_ar_a2_0 
+    WHERE NOT EXISTS ( SELECT * 
+    FROM public.playerscontacts AS playerscontacts_a3 
+    WHERE playerscontacts_a3.CONTACT = __tmp_delta_ins_contactsportonormalized_ar_a2_0.CONTACT AND playerscontacts_a3.NAME = __tmp_delta_ins_contactsportonormalized_ar_a2_0.NAME ) ) AS p_0_a3_0  ) AS delta_ins_playerscontacts_a3_0  ) AS delta_ins_playerscontacts_extra_alias) AS tbl"
+    PL/pgSQL function contactsportonormalized_delta_action() line 96 at SQL statement
+2024-03-21 17:15:36.035 GMT [89] LOG:  duration: 0.294 ms  plan:
+    Query Text: INSERT INTO public.playersbase (SELECT * FROM unnest(array_delta_ins_playersbase) as array_delta_ins_playersbase_alias)
+    Insert on playersbase  (cost=0.00..0.01 rows=0 width=0) (actual time=0.293..0.293 rows=0 loops=1)
+      Foreign Namespace: test.PlayersBase
+      ->  Function Scan on unnest array_delta_ins_playersbase_alias  (cost=0.00..0.01 rows=1 width=128) (actual time=0.004..0.005 rows=1 loops=1)
+2024-03-21 17:15:36.035 GMT [89] CONTEXT:  SQL statement "INSERT INTO public.playersbase (SELECT * FROM unnest(array_delta_ins_playersbase) as array_delta_ins_playersbase_alias)"
+    PL/pgSQL function contactsportonormalized_delta_action() line 116 at SQL statement
+2024-03-21 17:15:36.036 GMT [89] LOG:  duration: 0.423 ms  plan:
+    Query Text: INSERT INTO public.playerscontacts (SELECT * FROM unnest(array_delta_ins_playerscontacts) as array_delta_ins_playerscontacts_alias)
+    Insert on playerscontacts  (cost=0.00..0.01 rows=0 width=0) (actual time=0.422..0.422 rows=0 loops=1)
+      Foreign Namespace: test.Contacts
+      ->  Function Scan on unnest array_delta_ins_playerscontacts_alias  (cost=0.00..0.01 rows=1 width=128) (actual time=0.003..0.004 rows=1 loops=1)
+2024-03-21 17:15:36.036 GMT [89] CONTEXT:  SQL statement "INSERT INTO public.playerscontacts (SELECT * FROM unnest(array_delta_ins_playerscontacts) as array_delta_ins_playerscontacts_alias)"
+    PL/pgSQL function contactsportonormalized_delta_action() line 121 at SQL statement

@@ -1,0 +1,19 @@
+source playersdenormalized('_id':string,'name':string,'address':string,'contact':string).
+view contactsportodenormalized('name':string,'contact':string).
+
+%----- Item_size View -----
+%--- View definition (get):
+
+contactsportodenormalized(N,C) :- playersdenormalized(ID,N,'Porto',C).
+
+%--- Constraints
+_|_ :- playersdenormalized(_,N,ADD1,_), playersdenormalized(_,N,ADD2,_), not ADD1 = ADD2.
+
+% Prohibit the addition of a player to the view that belongs to another team
+_|_ :- contactsportodenormalized(N,_), playersdenormalized(_,N,ADD,_), not ADD='Porto' .
+
+%--- Inserts and deletes
+-playersdenormalized(ID,N,ADD,C) :- playersdenormalized(ID,N,ADD,C), ADD='Porto',not contactsportodenormalized(N,C).
+
+% ID='' generates new ID automatically in MongoDB
++playersdenormalized(ID,N,ADD,C) :- not playersdenormalized(_,N,ADD,C), contactsportodenormalized(N,C), ADD='Porto', ID=''. 
