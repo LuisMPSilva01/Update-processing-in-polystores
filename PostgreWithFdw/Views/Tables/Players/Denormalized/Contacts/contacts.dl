@@ -1,19 +1,21 @@
-source playersdenormalized('_id':string,'name':string,'address':string,'contact':string).
+source playersdenormalized('_id':string,'name':string,'address':string,'club':string,'contact':string).
 view contactsportodenormalized('name':string,'contact':string).
 
 %----- Item_size View -----
 %--- View definition (get):
 
-contactsportodenormalized(N,C) :- playersdenormalized(ID,N,'Porto',C).
+contactsportodenormalized(N,CONT) :- playersdenormalized(ID,N,'Porto',CLUB,CONT).
 
 %--- Constraints
-_|_ :- playersdenormalized(_,N,ADD1,_), playersdenormalized(_,N,ADD2,_), not ADD1 = ADD2.
+_|_ :- playersdenormalized(_,N,ADD1,CLUB2,_), playersdenormalized(_,N,ADD2,CLUB1,_), not ADD1 = ADD2.
+_|_ :- playersdenormalized(_,N,ADD1,CLUB2,_), playersdenormalized(_,N,ADD2,CLUB1,_), not CLUB1 = CLUB2.
 
-% Prohibit the addition of a player to the view that belongs to another team
-_|_ :- contactsportodenormalized(N,_), playersdenormalized(_,N,ADD,_), not ADD='Porto' .
+% Prohibit the addition of a player to the view that belongs to another address
+_|_ :- contactsportodenormalized(N,_), playersdenormalized(_,N,ADD,_,_), not ADD='Porto' .
 
 %--- Inserts and deletes
--playersdenormalized(ID,N,ADD,C) :- playersdenormalized(ID,N,ADD,C), ADD='Porto',not contactsportodenormalized(N,C).
+-playersdenormalized(ID,N,ADD,CLUB,CONT) :- playersdenormalized(ID,N,ADD,CLUB,CONT), ADD='Porto',not contactsportodenormalized(N,CONT).
 
 % ID='' generates new ID automatically in MongoDB
-+playersdenormalized(ID,N,ADD,C) :- not playersdenormalized(_,N,ADD,C), contactsportodenormalized(N,C), ADD='Porto', ID=''. 
+playerstmp(N,ADD,CONT) :- playersdenormalized(_,N,ADD,_,CONT).
++playersdenormalized(ID,N,ADD,CLUB,CONT) :- not playerstmp(N,ADD,CONT), CLUB='None',contactsportodenormalized(N,CONT), ADD='Porto', ID=''. 

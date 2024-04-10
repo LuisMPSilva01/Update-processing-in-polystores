@@ -2,9 +2,9 @@
 CREATE OR REPLACE VIEW public.contactsportodenormalized AS 
 SELECT __dummy__.COL0 AS NAME,__dummy__.COL1 AS CONTACT 
 FROM (SELECT contactsportodenormalized_a2_0.COL0 AS COL0, contactsportodenormalized_a2_0.COL1 AS COL1 
-FROM (SELECT playersdenormalized_a4_0.NAME AS COL0, playersdenormalized_a4_0.CONTACT AS COL1 
-FROM public.playersdenormalized AS playersdenormalized_a4_0 
-WHERE playersdenormalized_a4_0.ADDRESS = 'Porto' ) AS contactsportodenormalized_a2_0  ) AS __dummy__;
+FROM (SELECT playersdenormalized_a5_0.NAME AS COL0, playersdenormalized_a5_0.CONTACT AS COL1 
+FROM public.playersdenormalized AS playersdenormalized_a5_0 
+WHERE playersdenormalized_a5_0.ADDRESS = 'Porto' ) AS contactsportodenormalized_a2_0  ) AS __dummy__;
 
 CREATE EXTENSION IF NOT EXISTS plsh;
 
@@ -79,13 +79,13 @@ temprec_delta_ins_playersdenormalized public.playersdenormalized%ROWTYPE;
 FROM (SELECT  
 FROM (SELECT  
 FROM (SELECT  
-FROM public.playersdenormalized AS playersdenormalized_a4_0, (SELECT __tmp_delta_ins_contactsportodenormalized_a2_0.CONTACT AS COL0, __tmp_delta_ins_contactsportodenormalized_a2_0.NAME AS COL1 
+FROM public.playersdenormalized AS playersdenormalized_a5_0, (SELECT __tmp_delta_ins_contactsportodenormalized_a2_0.CONTACT AS COL0, __tmp_delta_ins_contactsportodenormalized_a2_0.NAME AS COL1 
 FROM __tmp_delta_ins_contactsportodenormalized AS __tmp_delta_ins_contactsportodenormalized_a2_0   UNION SELECT contactsportodenormalized_a2_0.CONTACT AS COL0, contactsportodenormalized_a2_0.NAME AS COL1 
 FROM public.contactsportodenormalized AS contactsportodenormalized_a2_0 
 WHERE NOT EXISTS ( SELECT * 
 FROM __tmp_delta_del_contactsportodenormalized AS __tmp_delta_del_contactsportodenormalized_a2 
 WHERE __tmp_delta_del_contactsportodenormalized_a2.CONTACT = contactsportodenormalized_a2_0.CONTACT AND __tmp_delta_del_contactsportodenormalized_a2.NAME = contactsportodenormalized_a2_0.NAME ) ) AS p_1_a2_1 
-WHERE p_1_a2_1.COL1 = playersdenormalized_a4_0.NAME AND playersdenormalized_a4_0.ADDRESS  <>  'Porto' ) AS p_0_a0_0  ) AS bot_a0_0  ) AS __dummy__ )
+WHERE p_1_a2_1.COL1 = playersdenormalized_a5_0.NAME AND playersdenormalized_a5_0.ADDRESS  <>  'Porto' ) AS p_0_a0_0  ) AS bot_a0_0  ) AS __dummy__ )
         THEN 
           RAISE check_violation USING MESSAGE = 'Invalid view update: constraints on the view are violated';
         END IF;
@@ -93,8 +93,10 @@ WHERE p_1_a2_1.COL1 = playersdenormalized_a4_0.NAME AND playersdenormalized_a4_0
 FROM (SELECT  
 FROM (SELECT  
 FROM (SELECT  
-FROM public.playersdenormalized AS playersdenormalized_a4_0, public.playersdenormalized AS playersdenormalized_a4_1 
-WHERE playersdenormalized_a4_1.NAME = playersdenormalized_a4_0.NAME AND playersdenormalized_a4_0.ADDRESS  <>  playersdenormalized_a4_1.ADDRESS ) AS p_0_a0_0  ) AS bot_a0_0  ) AS __dummy__ )
+FROM public.playersdenormalized AS playersdenormalized_a5_0, public.playersdenormalized AS playersdenormalized_a5_1 
+WHERE playersdenormalized_a5_1.NAME = playersdenormalized_a5_0.NAME AND playersdenormalized_a5_0.ADDRESS  <>  playersdenormalized_a5_1.ADDRESS  UNION ALL SELECT  
+FROM public.playersdenormalized AS playersdenormalized_a5_0, public.playersdenormalized AS playersdenormalized_a5_1 
+WHERE playersdenormalized_a5_1.NAME = playersdenormalized_a5_0.NAME AND playersdenormalized_a5_1.CLUB  <>  playersdenormalized_a5_0.CLUB ) AS p_0_a0_0  ) AS bot_a0_0  ) AS __dummy__ )
         THEN 
           RAISE check_violation USING MESSAGE = 'Invalid view update: constraints on the source relations are violated';
         END IF;
@@ -105,29 +107,29 @@ WHERE playersdenormalized_a4_1.NAME = playersdenormalized_a4_0.NAME AND playersd
         
             WITH __tmp_delta_del_contactsportodenormalized_ar AS (SELECT * FROM unnest(array_delta_del) as array_delta_del_alias limit delta_del_size),
             __tmp_delta_ins_contactsportodenormalized_ar as (SELECT * FROM unnest(array_delta_ins) as array_delta_ins_alias limit delta_ins_size)
-            SELECT array_agg(tbl) INTO array_delta_del_playersdenormalized FROM (SELECT (ROW(COL0,COL1,COL2,COL3) :: public.playersdenormalized).* 
-            FROM (SELECT delta_del_playersdenormalized_a4_0.COL0 AS COL0, delta_del_playersdenormalized_a4_0.COL1 AS COL1, delta_del_playersdenormalized_a4_0.COL2 AS COL2, delta_del_playersdenormalized_a4_0.COL3 AS COL3 
-FROM (SELECT p_0_a4_0.COL0 AS COL0, p_0_a4_0.COL1 AS COL1, p_0_a4_0.COL2 AS COL2, p_0_a4_0.COL3 AS COL3 
-FROM (SELECT playersdenormalized_a4_1._ID AS COL0, playersdenormalized_a4_1.NAME AS COL1, playersdenormalized_a4_1.ADDRESS AS COL2, playersdenormalized_a4_1.CONTACT AS COL3 
-FROM __tmp_delta_del_contactsportodenormalized_ar AS __tmp_delta_del_contactsportodenormalized_ar_a2_0, public.playersdenormalized AS playersdenormalized_a4_1 
-WHERE playersdenormalized_a4_1.NAME = __tmp_delta_del_contactsportodenormalized_ar_a2_0.NAME AND playersdenormalized_a4_1.CONTACT = __tmp_delta_del_contactsportodenormalized_ar_a2_0.CONTACT AND playersdenormalized_a4_1.ADDRESS = 'Porto' ) AS p_0_a4_0  ) AS delta_del_playersdenormalized_a4_0  ) AS delta_del_playersdenormalized_extra_alias) AS tbl;
+            SELECT array_agg(tbl) INTO array_delta_del_playersdenormalized FROM (SELECT (ROW(COL0,COL1,COL2,COL3,COL4) :: public.playersdenormalized).* 
+            FROM (SELECT delta_del_playersdenormalized_a5_0.COL0 AS COL0, delta_del_playersdenormalized_a5_0.COL1 AS COL1, delta_del_playersdenormalized_a5_0.COL2 AS COL2, delta_del_playersdenormalized_a5_0.COL3 AS COL3, delta_del_playersdenormalized_a5_0.COL4 AS COL4 
+FROM (SELECT p_0_a5_0.COL0 AS COL0, p_0_a5_0.COL1 AS COL1, p_0_a5_0.COL2 AS COL2, p_0_a5_0.COL3 AS COL3, p_0_a5_0.COL4 AS COL4 
+FROM (SELECT playersdenormalized_a5_1._ID AS COL0, playersdenormalized_a5_1.NAME AS COL1, playersdenormalized_a5_1.ADDRESS AS COL2, playersdenormalized_a5_1.CLUB AS COL3, playersdenormalized_a5_1.CONTACT AS COL4 
+FROM __tmp_delta_del_contactsportodenormalized_ar AS __tmp_delta_del_contactsportodenormalized_ar_a2_0, public.playersdenormalized AS playersdenormalized_a5_1 
+WHERE playersdenormalized_a5_1.NAME = __tmp_delta_del_contactsportodenormalized_ar_a2_0.NAME AND playersdenormalized_a5_1.CONTACT = __tmp_delta_del_contactsportodenormalized_ar_a2_0.CONTACT AND playersdenormalized_a5_1.ADDRESS = 'Porto' ) AS p_0_a5_0  ) AS delta_del_playersdenormalized_a5_0  ) AS delta_del_playersdenormalized_extra_alias) AS tbl;
 
 
             WITH __tmp_delta_del_contactsportodenormalized_ar AS (SELECT * FROM unnest(array_delta_del) as array_delta_del_alias limit delta_del_size),
             __tmp_delta_ins_contactsportodenormalized_ar as (SELECT * FROM unnest(array_delta_ins) as array_delta_ins_alias limit delta_ins_size)
-            SELECT array_agg(tbl) INTO array_delta_ins_playersdenormalized FROM (SELECT (ROW(COL0,COL1,COL2,COL3) :: public.playersdenormalized).* 
-            FROM (SELECT delta_ins_playersdenormalized_a4_0.COL0 AS COL0, delta_ins_playersdenormalized_a4_0.COL1 AS COL1, delta_ins_playersdenormalized_a4_0.COL2 AS COL2, delta_ins_playersdenormalized_a4_0.COL3 AS COL3 
-FROM (SELECT p_0_a4_0.COL0 AS COL0, p_0_a4_0.COL1 AS COL1, p_0_a4_0.COL2 AS COL2, p_0_a4_0.COL3 AS COL3 
-FROM (SELECT '' AS COL0, __tmp_delta_ins_contactsportodenormalized_ar_a2_0.NAME AS COL1, 'Porto' AS COL2, __tmp_delta_ins_contactsportodenormalized_ar_a2_0.CONTACT AS COL3 
+            SELECT array_agg(tbl) INTO array_delta_ins_playersdenormalized FROM (SELECT (ROW(COL0,COL1,COL2,COL3,COL4) :: public.playersdenormalized).* 
+            FROM (SELECT delta_ins_playersdenormalized_a5_0.COL0 AS COL0, delta_ins_playersdenormalized_a5_0.COL1 AS COL1, delta_ins_playersdenormalized_a5_0.COL2 AS COL2, delta_ins_playersdenormalized_a5_0.COL3 AS COL3, delta_ins_playersdenormalized_a5_0.COL4 AS COL4 
+FROM (SELECT p_0_a5_0.COL0 AS COL0, p_0_a5_0.COL1 AS COL1, p_0_a5_0.COL2 AS COL2, p_0_a5_0.COL3 AS COL3, p_0_a5_0.COL4 AS COL4 
+FROM (SELECT '' AS COL0, __tmp_delta_ins_contactsportodenormalized_ar_a2_0.NAME AS COL1, 'Porto' AS COL2, 'None' AS COL3, __tmp_delta_ins_contactsportodenormalized_ar_a2_0.CONTACT AS COL4 
 FROM __tmp_delta_ins_contactsportodenormalized_ar AS __tmp_delta_ins_contactsportodenormalized_ar_a2_0 
 WHERE NOT EXISTS ( SELECT * 
-FROM public.playersdenormalized AS playersdenormalized_a4 
-WHERE playersdenormalized_a4.CONTACT = __tmp_delta_ins_contactsportodenormalized_ar_a2_0.CONTACT AND playersdenormalized_a4.ADDRESS = 'Porto' AND playersdenormalized_a4.NAME = __tmp_delta_ins_contactsportodenormalized_ar_a2_0.NAME ) ) AS p_0_a4_0  ) AS delta_ins_playersdenormalized_a4_0  ) AS delta_ins_playersdenormalized_extra_alias) AS tbl; 
+FROM public.playersdenormalized AS playersdenormalized_a5 
+WHERE playersdenormalized_a5.CONTACT = __tmp_delta_ins_contactsportodenormalized_ar_a2_0.CONTACT AND playersdenormalized_a5.ADDRESS = 'Porto' AND playersdenormalized_a5.NAME = __tmp_delta_ins_contactsportodenormalized_ar_a2_0.NAME ) ) AS p_0_a5_0  ) AS delta_ins_playersdenormalized_a5_0  ) AS delta_ins_playersdenormalized_extra_alias) AS tbl; 
 
 
             IF array_delta_del_playersdenormalized IS DISTINCT FROM NULL THEN 
                 FOREACH temprec_delta_del_playersdenormalized IN array array_delta_del_playersdenormalized  LOOP 
-                   DELETE FROM public.playersdenormalized WHERE _ID =  temprec_delta_del_playersdenormalized._ID AND NAME =  temprec_delta_del_playersdenormalized.NAME AND ADDRESS =  temprec_delta_del_playersdenormalized.ADDRESS AND CONTACT =  temprec_delta_del_playersdenormalized.CONTACT;
+                   DELETE FROM public.playersdenormalized WHERE _ID =  temprec_delta_del_playersdenormalized._ID AND NAME =  temprec_delta_del_playersdenormalized.NAME AND ADDRESS =  temprec_delta_del_playersdenormalized.ADDRESS AND CLUB =  temprec_delta_del_playersdenormalized.CLUB AND CONTACT =  temprec_delta_del_playersdenormalized.CONTACT;
                 END LOOP;
             END IF;
 

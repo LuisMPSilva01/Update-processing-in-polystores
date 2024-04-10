@@ -3,8 +3,8 @@ CREATE OR REPLACE VIEW public.contactsportonormalized AS
 SELECT __dummy__.COL0 AS NAME,__dummy__.COL1 AS CONTACT 
 FROM (SELECT contactsportonormalized_a2_0.COL0 AS COL0, contactsportonormalized_a2_0.COL1 AS COL1 
 FROM (SELECT playerscontacts_a3_1.NAME AS COL0, playerscontacts_a3_1.CONTACT AS COL1 
-FROM public.playersbase AS playersbase_a3_0, public.playerscontacts AS playerscontacts_a3_1 
-WHERE playerscontacts_a3_1.NAME = playersbase_a3_0.NAME AND playersbase_a3_0.ADDRESS = 'Porto' ) AS contactsportonormalized_a2_0  ) AS __dummy__;
+FROM public.playersbase AS playersbase_a4_0, public.playerscontacts AS playerscontacts_a3_1 
+WHERE playerscontacts_a3_1.NAME = playersbase_a4_0.NAME AND playersbase_a4_0.ADDRESS = 'Porto' ) AS contactsportonormalized_a2_0  ) AS __dummy__;
 
 CREATE EXTENSION IF NOT EXISTS plsh;
 
@@ -81,13 +81,13 @@ temprec_delta_ins_playerscontacts public.playerscontacts%ROWTYPE;
 FROM (SELECT  
 FROM (SELECT  
 FROM (SELECT  
-FROM public.playersbase AS playersbase_a3_0, (SELECT __tmp_delta_ins_contactsportonormalized_a2_0.CONTACT AS COL0, __tmp_delta_ins_contactsportonormalized_a2_0.NAME AS COL1 
+FROM public.playersbase AS playersbase_a4_0, (SELECT __tmp_delta_ins_contactsportonormalized_a2_0.CONTACT AS COL0, __tmp_delta_ins_contactsportonormalized_a2_0.NAME AS COL1 
 FROM __tmp_delta_ins_contactsportonormalized AS __tmp_delta_ins_contactsportonormalized_a2_0   UNION SELECT contactsportonormalized_a2_0.CONTACT AS COL0, contactsportonormalized_a2_0.NAME AS COL1 
 FROM public.contactsportonormalized AS contactsportonormalized_a2_0 
 WHERE NOT EXISTS ( SELECT * 
 FROM __tmp_delta_del_contactsportonormalized AS __tmp_delta_del_contactsportonormalized_a2 
 WHERE __tmp_delta_del_contactsportonormalized_a2.CONTACT = contactsportonormalized_a2_0.CONTACT AND __tmp_delta_del_contactsportonormalized_a2.NAME = contactsportonormalized_a2_0.NAME ) ) AS p_1_a2_1 
-WHERE p_1_a2_1.COL1 = playersbase_a3_0.NAME AND playersbase_a3_0.ADDRESS  <>  'Porto' ) AS p_0_a0_0  ) AS bot_a0_0  ) AS __dummy__ )
+WHERE p_1_a2_1.COL1 = playersbase_a4_0.NAME AND playersbase_a4_0.ADDRESS  <>  'Porto' ) AS p_0_a0_0  ) AS bot_a0_0  ) AS __dummy__ )
         THEN 
           RAISE check_violation USING MESSAGE = 'Invalid view update: constraints on the view are violated';
         END IF;
@@ -95,13 +95,15 @@ WHERE p_1_a2_1.COL1 = playersbase_a3_0.NAME AND playersbase_a3_0.ADDRESS  <>  'P
 FROM (SELECT  
 FROM (SELECT  
 FROM (SELECT  
-FROM public.playersbase AS playersbase_a3_0, public.playersbase AS playersbase_a3_1 
-WHERE playersbase_a3_1.NAME = playersbase_a3_0.NAME AND playersbase_a3_0.ADDRESS  <>  playersbase_a3_1.ADDRESS  UNION ALL SELECT  
+FROM public.playersbase AS playersbase_a4_0, public.playersbase AS playersbase_a4_1 
+WHERE playersbase_a4_1.NAME = playersbase_a4_0.NAME AND playersbase_a4_0.ADDRESS  <>  playersbase_a4_1.ADDRESS  UNION ALL SELECT  
+FROM public.playersbase AS playersbase_a4_0, public.playersbase AS playersbase_a4_1 
+WHERE playersbase_a4_1.NAME = playersbase_a4_0.NAME AND playersbase_a4_0.CLUB  <>  playersbase_a4_1.CLUB  UNION ALL SELECT  
 FROM public.playerscontacts AS playerscontacts_a3_0 
 WHERE NOT EXISTS ( SELECT * 
-FROM (SELECT playersbase_a3_0.NAME AS COL0 
-FROM public.playersbase AS playersbase_a3_0   UNION SELECT playersbase_a3_0.NAME AS COL0 
-FROM public.playersbase AS playersbase_a3_0  ) AS p_1_a1 
+FROM (SELECT playersbase_a4_0.NAME AS COL0 
+FROM public.playersbase AS playersbase_a4_0   UNION SELECT playersbase_a4_0.NAME AS COL0 
+FROM public.playersbase AS playersbase_a4_0  ) AS p_1_a1 
 WHERE p_1_a1.COL0 = playerscontacts_a3_0.NAME ) ) AS p_0_a0_0  ) AS bot_a0_0  ) AS __dummy__ )
         THEN 
           RAISE check_violation USING MESSAGE = 'Invalid view update: constraints on the source relations are violated';
@@ -117,34 +119,34 @@ WHERE p_1_a1.COL0 = playerscontacts_a3_0.NAME ) ) AS p_0_a0_0  ) AS bot_a0_0  ) 
             FROM (SELECT delta_del_playerscontacts_a3_0.COL0 AS COL0, delta_del_playerscontacts_a3_0.COL1 AS COL1, delta_del_playerscontacts_a3_0.COL2 AS COL2 
 FROM (SELECT p_0_a3_0.COL0 AS COL0, p_0_a3_0.COL1 AS COL1, p_0_a3_0.COL2 AS COL2 
 FROM (SELECT playerscontacts_a3_2._ID AS COL0, playerscontacts_a3_2.NAME AS COL1, playerscontacts_a3_2.CONTACT AS COL2 
-FROM __tmp_delta_del_contactsportonormalized_ar AS __tmp_delta_del_contactsportonormalized_ar_a2_0, public.playersbase AS playersbase_a3_1, public.playerscontacts AS playerscontacts_a3_2 
-WHERE playerscontacts_a3_2.CONTACT = __tmp_delta_del_contactsportonormalized_ar_a2_0.CONTACT AND playerscontacts_a3_2.NAME = playersbase_a3_1.NAME AND playerscontacts_a3_2.NAME = __tmp_delta_del_contactsportonormalized_ar_a2_0.NAME AND playersbase_a3_1.ADDRESS = 'Porto' AND NOT EXISTS ( SELECT * 
+FROM __tmp_delta_del_contactsportonormalized_ar AS __tmp_delta_del_contactsportonormalized_ar_a2_0, public.playersbase AS playersbase_a4_1, public.playerscontacts AS playerscontacts_a3_2 
+WHERE playerscontacts_a3_2.CONTACT = __tmp_delta_del_contactsportonormalized_ar_a2_0.CONTACT AND playerscontacts_a3_2.NAME = playersbase_a4_1.NAME AND playerscontacts_a3_2.NAME = __tmp_delta_del_contactsportonormalized_ar_a2_0.NAME AND playersbase_a4_1.ADDRESS = 'Porto' AND NOT EXISTS ( SELECT * 
 FROM (SELECT playerscontacts_a3_1._ID AS COL0, playerscontacts_a3_1.NAME AS COL1, playerscontacts_a3_1.CONTACT AS COL2 
-FROM public.playersbase AS playersbase_a3_0, public.playerscontacts AS playerscontacts_a3_1 
-WHERE playerscontacts_a3_1.NAME = playersbase_a3_0.NAME AND playersbase_a3_0.ADDRESS = 'Porto' AND NOT EXISTS ( SELECT * 
-FROM (SELECT playerscontacts_a3_1.NAME AS COL0, playerscontacts_a3_1.CONTACT AS COL1 
-FROM public.playersbase AS playersbase_a3_0, public.playerscontacts AS playerscontacts_a3_1 
-WHERE playerscontacts_a3_1.NAME = playersbase_a3_0.NAME AND playersbase_a3_0.ADDRESS = 'Porto' ) AS p_2_a2 
+FROM public.playersbase AS playersbase_a4_0, public.playerscontacts AS playerscontacts_a3_1 
+WHERE playerscontacts_a3_1.NAME = playersbase_a4_0.NAME AND playersbase_a4_0.ADDRESS = 'Porto' AND NOT EXISTS ( SELECT * 
+FROM (SELECT playersbase_a4_1.NAME AS COL0, playerscontacts_a3_0.CONTACT AS COL1 
+FROM public.playerscontacts AS playerscontacts_a3_0, public.playersbase AS playersbase_a4_1 
+WHERE playersbase_a4_1.NAME = playerscontacts_a3_0.NAME AND playersbase_a4_1.ADDRESS = 'Porto' ) AS p_2_a2 
 WHERE p_2_a2.COL1 = playerscontacts_a3_1.CONTACT AND p_2_a2.COL0 = playerscontacts_a3_1.NAME ) ) AS p_1_a3 
 WHERE p_1_a3.COL2 = playerscontacts_a3_2.CONTACT AND p_1_a3.COL1 = playerscontacts_a3_2.NAME AND p_1_a3.COL0 = playerscontacts_a3_2._ID ) ) AS p_0_a3_0  ) AS delta_del_playerscontacts_a3_0  ) AS delta_del_playerscontacts_extra_alias) AS tbl;
 
 
             WITH __tmp_delta_del_contactsportonormalized_ar AS (SELECT * FROM unnest(array_delta_del) as array_delta_del_alias limit delta_del_size),
             __tmp_delta_ins_contactsportonormalized_ar as (SELECT * FROM unnest(array_delta_ins) as array_delta_ins_alias limit delta_ins_size)
-            SELECT array_agg(tbl) INTO array_delta_ins_playersbase FROM (SELECT (ROW(COL0,COL1,COL2) :: public.playersbase).* 
-            FROM (SELECT delta_ins_playersbase_a3_0.COL0 AS COL0, delta_ins_playersbase_a3_0.COL1 AS COL1, delta_ins_playersbase_a3_0.COL2 AS COL2 
-FROM (SELECT p_0_a3_0.COL0 AS COL0, p_0_a3_0.COL1 AS COL1, p_0_a3_0.COL2 AS COL2 
-FROM (SELECT '' AS COL0, __tmp_delta_ins_contactsportonormalized_ar_a2_0.NAME AS COL1, 'Porto' AS COL2 
+            SELECT array_agg(tbl) INTO array_delta_ins_playersbase FROM (SELECT (ROW(COL0,COL1,COL2,COL3) :: public.playersbase).* 
+            FROM (SELECT delta_ins_playersbase_a4_0.COL0 AS COL0, delta_ins_playersbase_a4_0.COL1 AS COL1, delta_ins_playersbase_a4_0.COL2 AS COL2, delta_ins_playersbase_a4_0.COL3 AS COL3 
+FROM (SELECT p_0_a4_0.COL0 AS COL0, p_0_a4_0.COL1 AS COL1, p_0_a4_0.COL2 AS COL2, p_0_a4_0.COL3 AS COL3 
+FROM (SELECT '' AS COL0, __tmp_delta_ins_contactsportonormalized_ar_a2_0.NAME AS COL1, 'Porto' AS COL2, 'None' AS COL3 
 FROM __tmp_delta_ins_contactsportonormalized_ar AS __tmp_delta_ins_contactsportonormalized_ar_a2_0 
 WHERE NOT EXISTS ( SELECT * 
-FROM (SELECT '' AS COL0, playerscontacts_a3_1.NAME AS COL1, 'Porto' AS COL2 
-FROM public.playersbase AS playersbase_a3_0, public.playerscontacts AS playerscontacts_a3_1 
-WHERE playerscontacts_a3_1.NAME = playersbase_a3_0.NAME AND playersbase_a3_0.ADDRESS = 'Porto' AND NOT EXISTS ( SELECT * 
-FROM public.playersbase AS playersbase_a3 
-WHERE playersbase_a3.NAME = playerscontacts_a3_1.NAME ) ) AS p_1_a3 
-WHERE p_1_a3.COL2 = 'Porto' AND p_1_a3.COL1 = __tmp_delta_ins_contactsportonormalized_ar_a2_0.NAME AND p_1_a3.COL0 = '' ) AND NOT EXISTS ( SELECT * 
-FROM public.playersbase AS playersbase_a3 
-WHERE playersbase_a3.NAME = __tmp_delta_ins_contactsportonormalized_ar_a2_0.NAME ) ) AS p_0_a3_0  ) AS delta_ins_playersbase_a3_0  ) AS delta_ins_playersbase_extra_alias) AS tbl;
+FROM (SELECT '' AS COL0, playersbase_a4_1.NAME AS COL1, 'Porto' AS COL2, 'None' AS COL3 
+FROM public.playerscontacts AS playerscontacts_a3_0, public.playersbase AS playersbase_a4_1 
+WHERE playersbase_a4_1.NAME = playerscontacts_a3_0.NAME AND playersbase_a4_1.ADDRESS = 'Porto' AND NOT EXISTS ( SELECT * 
+FROM public.playersbase AS playersbase_a4 
+WHERE playersbase_a4.NAME = playersbase_a4_1.NAME ) ) AS p_1_a4 
+WHERE p_1_a4.COL3 = 'None' AND p_1_a4.COL2 = 'Porto' AND p_1_a4.COL1 = __tmp_delta_ins_contactsportonormalized_ar_a2_0.NAME AND p_1_a4.COL0 = '' ) AND NOT EXISTS ( SELECT * 
+FROM public.playersbase AS playersbase_a4 
+WHERE playersbase_a4.NAME = __tmp_delta_ins_contactsportonormalized_ar_a2_0.NAME ) ) AS p_0_a4_0  ) AS delta_ins_playersbase_a4_0  ) AS delta_ins_playersbase_extra_alias) AS tbl;
 
 
             WITH __tmp_delta_del_contactsportonormalized_ar AS (SELECT * FROM unnest(array_delta_del) as array_delta_del_alias limit delta_del_size),
@@ -294,4 +296,3 @@ AS $$
     RETURN true;
   END;
 $$;
-

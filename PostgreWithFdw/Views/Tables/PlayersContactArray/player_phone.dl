@@ -1,0 +1,18 @@
+source players_contact('contactId':int,'phone':string,'name':string,'email':string).
+view players_phone('contactId':int,'name':string,'phone':string).
+
+%--- View definition (get):
+players_phone(ID,N,P) :- players_contact(ID,P,N,E), not P = 'Null', E = 'Null'.
+
+%--- Constraints
+PK(players_contact,['contactId']).
+
+_|_ :- players_contact(ID,'Null',N,'Null').
+_|_ :- players_contact(ID,P,N,E), not P = 'Null', not E = 'Null'.
+
+_|_ :- players_phone(ID,N,'Null').
+
+%--- Inserts and deletes
+-players_contact(ID,P,N,E) :- players_contact(ID,P,N,E), not players_phone(ID,N,P), E='Null'.
+
++players_contact(ID,P,N,E) :- not players_contact(ID,P,N,E), players_phone(ID,N,P), E='Null'.

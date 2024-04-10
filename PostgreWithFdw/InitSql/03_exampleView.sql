@@ -27,6 +27,7 @@ CREATE FOREIGN TABLE PlayersDenormalized (
   _id name,
   name text,
   address text,
+  club text,
   contact text
 ) SERVER "MongoDB server" OPTIONS (
     database 'test',
@@ -36,7 +37,8 @@ CREATE FOREIGN TABLE PlayersDenormalized (
 CREATE FOREIGN TABLE PlayersBase (
   _id name,
   name text,
-  address text
+  address text,
+  club text
 ) SERVER "MongoDB server" OPTIONS (
     database 'test',
         collection 'PlayersBase'
