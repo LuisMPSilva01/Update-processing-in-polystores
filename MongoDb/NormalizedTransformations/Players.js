@@ -7,12 +7,12 @@ db.Players.find().forEach(function(doc) {
         // Upsert contact into the Contacts collection
         db.Contacts.updateOne(
             // Match the contact and name
-            { contact: contact, name: doc.name },
+            { contact: contact, players_name: doc.name },
             // Update or insert the document with contact and name
             {
                 $setOnInsert: {
                     contact: contact,
-                    name: doc.name
+                    players_name: doc.name
                 }
             },
             // Upsert option to insert if not found

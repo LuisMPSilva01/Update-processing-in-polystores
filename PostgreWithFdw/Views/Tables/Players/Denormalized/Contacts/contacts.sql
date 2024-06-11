@@ -123,8 +123,30 @@ FROM (SELECT p_0_a5_0.COL0 AS COL0, p_0_a5_0.COL1 AS COL1, p_0_a5_0.COL2 AS COL2
 FROM (SELECT '' AS COL0, __tmp_delta_ins_contactsportodenormalized_ar_a2_0.NAME AS COL1, 'Porto' AS COL2, 'None' AS COL3, __tmp_delta_ins_contactsportodenormalized_ar_a2_0.CONTACT AS COL4 
 FROM __tmp_delta_ins_contactsportodenormalized_ar AS __tmp_delta_ins_contactsportodenormalized_ar_a2_0 
 WHERE NOT EXISTS ( SELECT * 
+FROM (SELECT '' AS COL0, playersdenormalized_a5_1.NAME AS COL1, 'Porto' AS COL2, playersdenormalized_a5_0.CLUB AS COL3, playersdenormalized_a5_1.CONTACT AS COL4 
+FROM public.playersdenormalized AS playersdenormalized_a5_0, public.playersdenormalized AS playersdenormalized_a5_1 
+WHERE playersdenormalized_a5_1.NAME = playersdenormalized_a5_0.NAME AND playersdenormalized_a5_1.ADDRESS = 'Porto' AND NOT EXISTS ( SELECT * 
 FROM public.playersdenormalized AS playersdenormalized_a5 
-WHERE playersdenormalized_a5.CONTACT = __tmp_delta_ins_contactsportodenormalized_ar_a2_0.CONTACT AND playersdenormalized_a5.ADDRESS = 'Porto' AND playersdenormalized_a5.NAME = __tmp_delta_ins_contactsportodenormalized_ar_a2_0.NAME ) ) AS p_0_a5_0  ) AS delta_ins_playersdenormalized_a5_0  ) AS delta_ins_playersdenormalized_extra_alias) AS tbl; 
+WHERE playersdenormalized_a5.CONTACT = playersdenormalized_a5_1.CONTACT AND playersdenormalized_a5.ADDRESS = 'Porto' AND playersdenormalized_a5.NAME = playersdenormalized_a5_1.NAME ) ) AS p_1_a5 
+WHERE p_1_a5.COL4 = __tmp_delta_ins_contactsportodenormalized_ar_a2_0.CONTACT AND p_1_a5.COL3 = 'None' AND p_1_a5.COL2 = 'Porto' AND p_1_a5.COL1 = __tmp_delta_ins_contactsportodenormalized_ar_a2_0.NAME AND p_1_a5.COL0 = '' ) AND NOT EXISTS ( SELECT * 
+FROM public.playersdenormalized AS playersdenormalized_a5 
+WHERE playersdenormalized_a5.NAME = __tmp_delta_ins_contactsportodenormalized_ar_a2_0.NAME )  UNION SELECT '' AS COL0, playersdenormalized_a5_1.NAME AS COL1, 'Porto' AS COL2, playersdenormalized_a5_1.CLUB AS COL3, __tmp_delta_ins_contactsportodenormalized_ar_a2_0.CONTACT AS COL4 
+FROM __tmp_delta_ins_contactsportodenormalized_ar AS __tmp_delta_ins_contactsportodenormalized_ar_a2_0, public.playersdenormalized AS playersdenormalized_a5_1 
+WHERE playersdenormalized_a5_1.NAME = __tmp_delta_ins_contactsportodenormalized_ar_a2_0.NAME AND NOT EXISTS ( SELECT * 
+FROM (SELECT '' AS COL0, playersdenormalized_a5_1.NAME AS COL1, 'Porto' AS COL2, playersdenormalized_a5_0.CLUB AS COL3, playersdenormalized_a5_1.CONTACT AS COL4 
+FROM public.playersdenormalized AS playersdenormalized_a5_0, public.playersdenormalized AS playersdenormalized_a5_1 
+WHERE playersdenormalized_a5_1.NAME = playersdenormalized_a5_0.NAME AND playersdenormalized_a5_1.ADDRESS = 'Porto' AND NOT EXISTS ( SELECT * 
+FROM public.playersdenormalized AS playersdenormalized_a5 
+WHERE playersdenormalized_a5.CONTACT = playersdenormalized_a5_1.CONTACT AND playersdenormalized_a5.ADDRESS = 'Porto' AND playersdenormalized_a5.NAME = playersdenormalized_a5_1.NAME ) ) AS p_3_a5 
+WHERE p_3_a5.COL4 = __tmp_delta_ins_contactsportodenormalized_ar_a2_0.CONTACT AND p_3_a5.COL3 = playersdenormalized_a5_1.CLUB AND p_3_a5.COL2 = 'Porto' AND p_3_a5.COL1 = playersdenormalized_a5_1.NAME AND p_3_a5.COL0 = '' ) AND NOT EXISTS ( SELECT * 
+FROM (SELECT '' AS COL0, playersdenormalized_a5_0.NAME AS COL1, 'Porto' AS COL2, 'None' AS COL3, playersdenormalized_a5_0.CONTACT AS COL4 
+FROM public.playersdenormalized AS playersdenormalized_a5_0 
+WHERE playersdenormalized_a5_0.ADDRESS = 'Porto' AND NOT EXISTS ( SELECT * 
+FROM public.playersdenormalized AS playersdenormalized_a5 
+WHERE playersdenormalized_a5.NAME = playersdenormalized_a5_0.NAME ) ) AS p_2_a5 
+WHERE p_2_a5.COL4 = __tmp_delta_ins_contactsportodenormalized_ar_a2_0.CONTACT AND p_2_a5.COL3 = playersdenormalized_a5_1.CLUB AND p_2_a5.COL2 = 'Porto' AND p_2_a5.COL1 = playersdenormalized_a5_1.NAME AND p_2_a5.COL0 = '' ) AND NOT EXISTS ( SELECT * 
+FROM public.playersdenormalized AS playersdenormalized_a5 
+WHERE playersdenormalized_a5.CONTACT = __tmp_delta_ins_contactsportodenormalized_ar_a2_0.CONTACT AND playersdenormalized_a5.ADDRESS = 'Porto' AND playersdenormalized_a5.NAME = playersdenormalized_a5_1.NAME ) ) AS p_0_a5_0  ) AS delta_ins_playersdenormalized_a5_0  ) AS delta_ins_playersdenormalized_extra_alias) AS tbl; 
 
 
             IF array_delta_del_playersdenormalized IS DISTINCT FROM NULL THEN 

@@ -17,5 +17,10 @@ _|_ :- contactsportodenormalized(N,_), playersdenormalized(_,N,ADD,_,_), not ADD
 -playersdenormalized(ID,N,ADD,CLUB,CONT) :- playersdenormalized(ID,N,ADD,CLUB,CONT), ADD='Porto',not contactsportodenormalized(N,CONT).
 
 % ID='' generates new ID automatically in MongoDB
+% New player
+playerstmp(N) :- playersdenormalized(_,N,_,_,_).
++playersdenormalized(ID,N,ADD,CLUB,CONT) :- not playerstmp(N), CLUB='None',contactsportodenormalized(N,CONT), ADD='Porto', ID=''. 
+
+% Existing player
 playerstmp(N,ADD,CONT) :- playersdenormalized(_,N,ADD,_,CONT).
-+playersdenormalized(ID,N,ADD,CLUB,CONT) :- not playerstmp(N,ADD,CONT), CLUB='None',contactsportodenormalized(N,CONT), ADD='Porto', ID=''. 
++playersdenormalized(ID,N,ADD,CLUB,CONT) :- not playerstmp(N,ADD,CONT), playersdenormalized(_,N,_,CLUB,_),contactsportodenormalized(N,CONT), ADD='Porto', ID=''. 

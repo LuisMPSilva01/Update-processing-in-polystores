@@ -34,20 +34,19 @@ CREATE FOREIGN TABLE PlayersDenormalized (
         collection 'Playersgorda'
 );
 
-CREATE FOREIGN TABLE PlayersBase (
+CREATE FOREIGN TABLE players (
   _id name,
-  name text,
   address text,
-  club text
+  name text
 ) SERVER "MongoDB server" OPTIONS (
     database 'test',
         collection 'PlayersBase'
 );
 
-CREATE FOREIGN TABLE PlayersContacts (
+CREATE FOREIGN TABLE playerscontact (
   _id name,
-  name text,
-  contact text
+  contact text,
+  players_name text
 ) SERVER "MongoDB server" OPTIONS (
     database 'test',
         collection 'Contacts'

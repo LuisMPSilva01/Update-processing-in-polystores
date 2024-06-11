@@ -1,5 +1,5 @@
 -- Program is validated --
-CREATE OR REPLACE VIEW public.contactsportonormalized AS 
+/*CREATE OR REPLACE VIEW public.contactsportonormalized AS 
 SELECT __dummy__.COL0 AS NAME,__dummy__.COL1 AS CONTACT 
 FROM (SELECT contactsportonormalized_a2_0.COL0 AS COL0, contactsportonormalized_a2_0.COL1 AS COL1 
 FROM (SELECT playerscontacts_a3_1.NAME AS COL0, playerscontacts_a3_1.CONTACT AS COL1 
@@ -295,4 +295,4 @@ AS $$
     DROP TABLE IF EXISTS __tmp_delta_ins_contactsportonormalized;
     RETURN true;
   END;
-$$;
+$$;*/

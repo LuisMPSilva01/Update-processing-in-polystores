@@ -3,17 +3,18 @@
         "name": "Trincao",
         "address": "Lisboa",
         "club": "Sporting",
-        "contact": [
-            "trincao@gmail.com"
-        ]
+        "contact": [ "trincao@gmail.com" ]
     },
     {
         "name": "Marega",
         "address": "Porto",
         "club": "Porto",
-        "contact": [
-            "marega@gmail.com",
-            "portoMarega@gmail.com"
-        ]
+        "contact": [ "marega@gmail.com", "portoMarega@gmail.com" ]
+    },
+    {
+        "name": "Francisco",
+        "address": "Porto",
+        "club": "Porto",
+        "contact": [ "conceicao@gmail.com" ]
     }
 ]

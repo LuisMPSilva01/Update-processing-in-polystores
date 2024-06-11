@@ -1,4 +1,4 @@
--- Program is validated --
+/*-- Program is validated --
 CREATE OR REPLACE VIEW public.players_phone AS 
 SELECT __dummy__.COL0 AS CONTACTID,__dummy__.COL1 AS NAME,__dummy__.COL2 AS PHONE 
 FROM (SELECT players_phone_a3_0.COL0 AS COL0, players_phone_a3_0.COL1 AS COL1, players_phone_a3_0.COL2 AS COL2 
@@ -262,4 +262,4 @@ AS $$
     DROP TABLE IF EXISTS __tmp_delta_ins_players_phone;
     RETURN true;
   END;
-$$;
+$$;*/

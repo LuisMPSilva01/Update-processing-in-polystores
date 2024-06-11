@@ -1,0 +1,29 @@
+source players('_id':string,'address':string,'name':string).
+source playerscontact('_id':string,'contact':string,'players_name':string).
+view contactsporto('name':string,'contact':string).
+
+%--- View definition (get):
+contactsporto(N,C) :- players(_,'Porto',N), playerscontact(_,C,N).
+
+%--- Constraints 
+% primary key
+_|_ :- players(_,ADD1,N), players(_,ADD2,N), not ADD1 = ADD2.
+
+% fk Constraints (player reference needs to exist)
+playername(N) :- players(ID,ADD,N).
+_|_ :- playerscontact(_,_,N), not playername(N).
+
+% Prohibit the addition of a player to the view that belongs to an address different from Porto
+_|_ :- contactsporto(N,_), players(_,ADD,N), not ADD='Porto' .
+
+%--- Inserts and deletes
+% if we delete from view then delete in playerscontact
+-playerscontact(ID,C,N) :- playerscontact(ID,C,N), players(_,'Porto',N), not contactsporto(N,C).
+
+% if new player has a name that doesnt exist then add it to players table
++players(ID,ADD,N) :- not playername(N), contactsporto(N,C), ID='', ADD='Porto'. 
+
+% if new contact is added to the view, then it goes into the playerscontact table 
+% this addition is protected from adding contacts into non Porto players by the constraints
+playerscontactnoid(C,N) :- playerscontact(ID,C,N).
++playerscontact(ID,C,N) :- not playerscontactnoid(C,N), ID='',contactsporto(N,C).

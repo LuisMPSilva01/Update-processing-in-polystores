@@ -1,0 +1,11 @@
+[
+    {
+      "name": "Marega",
+      "address": "Porto",
+      "contact": {
+        "123": "phone",
+        "Marega@gmail.com": "email",
+        "portoMarega@gmail.com": "email"
+      }
+    }
+]
