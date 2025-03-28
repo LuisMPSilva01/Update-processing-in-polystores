@@ -4,7 +4,7 @@ services:
   postgres:
     container_name: updt_process_postgre
     build:
-      context: ./PostgreWithFdw
+      context: ./ExemploTese
       dockerfile: Dockerfile
     ports:
       - "5432:5432"
@@ -13,9 +13,8 @@ services:
       POSTGRES_PASSWORD: root
       POSTGRES_DB: test
     volumes:
-      - ./PostgreWithFdw/InitSql:/docker-entrypoint-initdb.d/
-      - ./PostgreWithFdw/Views:/Views
-      - ./PostgreWithFdw/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./ExemploTese/InitSql:/docker-entrypoint-initdb.d/
+      - ./ExemploTese/postgresql.conf:/etc/postgresql/postgresql.conf
     command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
 
   mongodb:
